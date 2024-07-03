@@ -10,8 +10,8 @@ class AppName {
   static const String erro = "erro";
   static const String info = "info";
 
-  //escola
-  static const String nomeEscolaDefault = "Selecione uma escola aqui!";
+  //imagens
+  static const String logo = "assets/images/teste.png";
 
   //
   static const String permissaoGPS =

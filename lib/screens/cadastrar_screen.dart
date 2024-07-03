@@ -22,9 +22,10 @@ class CadastroScreen extends StatefulWidget {
 
 class CadastroScreenState extends State<CadastroScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
   UsuarioModel usuarioModel = UsuarioModel();
   ValidationResult result = ValidationResult();
-  bool _isLoading = false;
+
   final ImagePicker _picker = ImagePicker();
   DatabaseHelper db = DatabaseHelper();
 
@@ -63,6 +64,7 @@ class CadastroScreenState extends State<CadastroScreen> {
         ),
         centerTitle: true,
         backgroundColor: AppColors.cAccentColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

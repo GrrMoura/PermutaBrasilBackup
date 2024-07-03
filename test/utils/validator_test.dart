@@ -58,5 +58,53 @@ void main() {
     test('emailIsValid - email inválido', () {
       expect(emailIsValid('john.doe@example').isValid, false);
     });
+    test('empty password returns error', () {
+      final result = senhaIsValid('');
+      expect(result.isValid, false);
+      expect(result.errorMessage, 'A senha deve ter entre 8 e 20 caracteres');
+    });
+
+    test('password with less than 8 characters returns error', () {
+      final result = senhaIsValid('Ab1!');
+      expect(result.isValid, false);
+      expect(result.errorMessage, 'A senha deve ter entre 8 e 20 caracteres');
+    });
+
+    test('password with more than 20 characters returns error', () {
+      final result = senhaIsValid('Ab1!Ab1!Ab1!Ab1!Ab1!Ab1!');
+      expect(result.isValid, false);
+      expect(result.errorMessage, 'A senha deve ter entre 8 e 20 caracteres');
+    });
+
+    test('password with consecutive repeated characters returns error', () {
+      final result = senhaIsValid('111111111');
+      expect(result.isValid, false);
+      expect(result.errorMessage, "A senha não pode ser números repetidos");
+    });
+
+    test('password without a number returns error', () {
+      final result = senhaIsValid('Abcdefgh!');
+      expect(result.isValid, false);
+      expect(result.errorMessage, 'A senha deve conter pelo menos um número');
+    });
+
+    test('password without a letter returns error', () {
+      final result = senhaIsValid('12345678!');
+      expect(result.isValid, false);
+      expect(result.errorMessage, 'A senha deve conter pelo menos uma letra');
+    });
+
+    test('password without a special character returns error', () {
+      final result = senhaIsValid('Abcdefgh1');
+      expect(result.isValid, false);
+      expect(result.errorMessage,
+          'A senha deve conter pelo menos um caractere especial');
+    });
+
+    test('valid password returns true', () {
+      final result = senhaIsValid('Ab1!Ab1!');
+      expect(result.isValid, true);
+      expect(result.errorMessage, '');
+    });
   });
 }

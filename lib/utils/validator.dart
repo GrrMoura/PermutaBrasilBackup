@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 class ValidationResult {
   final bool? isValid;
   final String? errorMessage;
@@ -174,4 +176,62 @@ ValidationResult emailIsValid(String email) {
   return ValidationResult(
       isValid: emailRegExp.hasMatch(email),
       errorMessage: "Por favor, insira um email válido");
+}
+
+ValidationResult senhaIsValid(String senha) {
+  // Verifica se a senha não é nula e está dentro do tamanho especificado
+  if (senha.isEmpty || senha.length < 8 || senha.length > 20) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: "A senha deve ter entre 8 e 20 caracteres",
+    );
+  }
+
+  // Verifica se não há caracteres repetidos consecutivos
+  if (_caracteresRepetidos(senha)) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: "A senha não pode ser números repetidos",
+    );
+  }
+  // Verifica se contém pelo menos um número
+  if (!senha.contains(RegExp(r'\d'))) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: "A senha deve conter pelo menos um número",
+    );
+  }
+
+  // Verifica se contém pelo menos uma letra
+  if (!senha.contains(RegExp(r'[a-zA-Z]'))) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: "A senha deve conter pelo menos uma letra",
+    );
+  }
+
+  // Verifica se há pelo menos um caractere especial
+  final RegExp caracterEspecialRegExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+  if (!caracterEspecialRegExp.hasMatch(senha)) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: "A senha deve conter pelo menos um caractere especial",
+    );
+  }
+
+  // Se passar por todas as validações, a senha é considerada válida
+  return ValidationResult(
+    isValid: true,
+    errorMessage: "",
+  );
+}
+
+bool _caracteresRepetidos(String senha) {
+  // Verifica se todos os caracteres na senha são iguais
+  for (int i = 0; i < senha.length - 1; i++) {
+    if (senha[i] != senha[i + 1]) {
+      return false;
+    }
+  }
+  return true; // todos os caracteres são iguais
 }
