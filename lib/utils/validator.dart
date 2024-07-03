@@ -1,31 +1,3 @@
-class Validador {
-  // Validar número de CPF
-
-  static bool dataNascimentoIsValid({String? dtNascimento}) {
-    if (dtNascimento!.length < 10) {
-      return (false);
-    }
-
-    final dtSplitada = dtNascimento.split('/');
-
-    if (dtSplitada.length == 3) {
-      final dia = int.tryParse(dtSplitada[0]);
-      final mes = int.tryParse(dtSplitada[1]);
-      final ano = int.tryParse(dtSplitada[2]);
-
-      if (ano! >= DateTime.now().year || ano < DateTime.now().year - 100) {
-        return false;
-      }
-
-      final date = DateTime(ano, mes!, dia!);
-      if (date.year == ano && date.month == mes && date.day == dia) {
-        return true;
-      }
-    }
-    return false;
-  }
-}
-
 class ValidationResult {
   final bool? isValid;
   final String? errorMessage;
@@ -175,7 +147,7 @@ ValidationResult dataNascimentoIsValid(String? dtNascimento) {
   );
 }
 
-ValidationResult formularioIsValid(String nome) {
+ValidationResult stringIsValid(String nome) {
   if (nome.isEmpty) {
     return ValidationResult(
       isValid: false,
@@ -195,9 +167,11 @@ ValidationResult formularioIsValid(String nome) {
   return ValidationResult(isValid: true, errorMessage: "");
 }
 
-bool emailIsValid(String email) {
+ValidationResult emailIsValid(String email) {
   final RegExp emailRegExp = RegExp(
-    r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
-  return emailRegExp.hasMatch(email);
+  return ValidationResult(
+      isValid: emailRegExp.hasMatch(email),
+      errorMessage: "Por favor, insira um email válido");
 }

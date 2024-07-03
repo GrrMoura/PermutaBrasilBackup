@@ -28,7 +28,7 @@ class UserController {
 
       if (response.statusCode == 200) {
         // Sucesso no cadastro
-        // Navega para a próxima tela se necessário
+
         // context.push(AppRouterName.cadastro);
       } else {
         // Tratar erros de resposta do servidor
@@ -66,7 +66,7 @@ class UserController {
 
       if (response.statusCode == 200) {
         // Sucesso ao recuperar a senha
-        // Navega para a próxima tela se necessário
+
         // context.push(AppRouterName.recuperacaoSenha);
       } else {
         // Tratar erros de resposta do servidor

@@ -5,6 +5,7 @@ import 'package:permuta_brasil/models/recuperar_senha_model.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 
 import 'package:permuta_brasil/utils/styles.dart';
+import 'package:permuta_brasil/utils/validator.dart';
 
 class RecuperarSenhaScreen extends StatefulWidget {
   const RecuperarSenhaScreen({super.key});
@@ -16,6 +17,7 @@ class RecuperarSenhaScreen extends StatefulWidget {
 class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  ValidationResult result = ValidationResult();
   RecuperarSenhaModel recuperarSenhaModel = RecuperarSenhaModel();
 
   @override
@@ -33,61 +35,67 @@ class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: ListView(
-            children: [
-              SizedBox(height: 60.h),
-              Text(
-                'Esqueceu sua senha?',
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.cAccentColor,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 60.h),
+                Text(
+                  'Esqueceu sua senha?',
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.cAccentColor,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                'Por favor, insira seu email para enviar um link de recuperação de senha.',
-                textAlign: TextAlign.center,
-                style: Styles()
-                    .mediumTextStyle()
-                    .copyWith(color: AppColors.cTextLightColor),
-              ),
-              SizedBox(height: 40.h),
-              _buildGenericTextField(
-                label: 'Email',
-                onSave: (String? value) {
-                  recuperarSenhaModel.email = value;
-                },
-                validator: (String? value) {
-                  return _validateEmail(value);
-                },
-                keyboardType: TextInputType.emailAddress,
-                prefixIcon: Icons.email,
-              ),
-              SizedBox(height: 40.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submitForm,
-                  style: Styles().elevatedButtonStyle(),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white))
-                      : const Text('Enviar'),
+                SizedBox(height: 20.h),
+                Text(
+                  'Por favor, insira seu email para enviar um link de recuperação de senha.',
+                  textAlign: TextAlign.center,
+                  style: Styles()
+                      .mediumTextStyle()
+                      .copyWith(color: AppColors.cTextLightColor),
                 ),
-              ),
-              SizedBox(height: 40.h),
-              TextButton(
-                onPressed: () {
-                  // Navegar de volta para a tela de login
-                  // Navigator.pop(context);
-                },
-                child:
-                    Text('Voltar ao Login', style: Styles().mediumTextStyle()),
-              ),
-            ],
+                SizedBox(height: 40.h),
+                _buildGenericTextField(
+                  label: 'Email',
+                  onSave: (String? value) {
+                    recuperarSenhaModel.email = value;
+                  },
+                  validator: (String? value) {
+                    result = emailIsValid(value!);
+                    if (result.isValid!) {
+                      return null;
+                    }
+                    return result.errorMessage;
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  prefixIcon: Icons.email,
+                ),
+                SizedBox(height: 40.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submitForm,
+                    style: Styles().elevatedButtonStyle(),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white))
+                        : const Text('Enviar'),
+                  ),
+                ),
+                SizedBox(height: 40.h),
+                TextButton(
+                  onPressed: () {
+                    // Navegar de volta para a tela de login
+                    // Navigator.pop(context);
+                  },
+                  child: Text('Voltar ao Login',
+                      style: Styles().mediumTextStyle()),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -133,18 +141,5 @@ class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
         enabled: !_isLoading,
       ),
     );
-  }
-
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Por favor, insira o email';
-    }
-    // Regex pattern para validação de email
-    String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-    RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(value)) {
-      return 'Por favor, insira um email válido';
-    }
-    return null;
   }
 }
