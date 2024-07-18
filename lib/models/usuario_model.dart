@@ -1,32 +1,31 @@
-import 'dart:io';
-
 class UsuarioModel {
-  String? cpf;
-  File? identidadeFuncional;
-  DateTime? dataNascimento;
-  List<int>? idEstados; // Novo atributo para armazenar IDs de estados
-  String? estadoOrigem;
-  String? estadoDestino;
   String? nome;
+  String? email;
+  String? cpf;
+  DateTime? dataNascimento;
+  int? estadoOrigemId;
   DateTime? dataInclusao;
+  List<int>? instituicoesId;
+
+  //File? identidadeFuncional;
 
   UsuarioModel(
       {this.cpf,
-      this.identidadeFuncional,
+      //  this.identidadeFuncional,
       this.dataNascimento,
-      this.idEstados,
-      this.estadoOrigem,
-      this.estadoDestino,
+      this.instituicoesId,
+      this.estadoOrigemId,
+      this.email,
       this.dataInclusao,
       this.nome});
 
   Map<String, dynamic> toJson() => {
         'cpf': cpf,
-        'identidadeFuncional': identidadeFuncional,
+        //  'identidadeFuncional': identidadeFuncional,
         'dataNascimento': dataNascimento!.toIso8601String(),
-        'idEstados': idEstados,
-        'estadoOrigem': estadoOrigem,
-        'estadoDestino': estadoDestino,
+        'instituicoesId': instituicoesId,
+        'estadoOrigemId': estadoOrigemId,
+        'email': email,
         'dataInclusao': dataInclusao!.toIso8601String(),
         'nome': nome,
       };
@@ -35,11 +34,11 @@ class UsuarioModel {
     return UsuarioModel(
       cpf: json['cpf'],
       nome: json['nome'],
-      identidadeFuncional: json['identidadeFuncional'],
+      // identidadeFuncional: json['identidadeFuncional'],
       dataNascimento: DateTime.parse(json['dataNascimento']),
-      idEstados: List<int>.from(json['idEstados'] ?? []),
-      estadoOrigem: json['estadoOrigem'],
-      estadoDestino: json['estadoDestino'],
+      instituicoesId: List<int>.from(json['instituicoesId'] ?? []),
+      estadoOrigemId: json['estadoOrigemId'],
+      email: json['email'],
       dataInclusao: DateTime.parse(json['dataInclusao']),
     );
   }

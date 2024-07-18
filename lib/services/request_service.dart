@@ -21,36 +21,46 @@ class RequestService {
       required Options options}) async {
     try {
       Dio dio = Dio(BaseOptions(
-          connectTimeout: Duration(seconds: tempoLimite),
-          receiveTimeout: Duration(seconds: tempoLimite)));
+        connectTimeout: Duration(seconds: tempoLimite),
+        receiveTimeout: Duration(seconds: tempoLimite),
+      ));
+
+      // Configuração para aceitar qualquer certificado (INSEGURO! Não use em produção)
+      dio.interceptors.add(InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // Ignora a verificação de certificado
+          options.headers["verify"] = false;
+          return handler.next(options); // prossegue com a solicitação
+        },
+      ));
+
       Response response = await dio.post(url, data: data, options: options);
-
       return response;
+      // try {
+      //   Dio dio = Dio(BaseOptions(
+      //       connectTimeout: Duration(seconds: tempoLimite),
+      //       receiveTimeout: Duration(seconds: tempoLimite)));
+      //   Response response = await dio.post(url, data: data, options: options);
+
+      //   return response;
     } on DioException catch (e) {
-      if (e.response != null) {
-        return e.response!;
-      } else {
-        if (e.type == DioExceptionType.connectionTimeout ||
-            e.type == DioExceptionType.receiveTimeout) {
-          Response response = Response(
-              statusCode: 504,
-              requestOptions: RequestOptions(path: ''),
-              statusMessage:
-                  "Tempo para tentativa de conexão excedido, caso o erro persista entre em contato com a DTI");
-
-          return response;
-        } else {
-          Response response = Response(
-              statusCode: 403,
-              requestOptions: RequestOptions(path: ''),
-              statusMessage:
-                  "Não foi possível estabelecer conexão com o servidor.");
-
-          return response;
-        }
-      }
+      return e.response!;
     }
   }
 
-  // Outros métodos HTTP (GET, PUT, DELETE) podem ser adicionados aqui conforme necessário
+  static Future<Response> getOptions({
+    required String url,
+    Options? options,
+  }) async {
+    try {
+      Dio dio = Dio(BaseOptions(
+        connectTimeout: Duration(seconds: tempoLimite),
+        receiveTimeout: Duration(seconds: tempoLimite),
+      ));
+      Response response = await dio.get(url, options: options);
+      return response;
+    } on DioException catch (e) {
+      return e.response!;
+    }
+  }
 }

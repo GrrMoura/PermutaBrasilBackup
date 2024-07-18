@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:permuta_brasil/controller/autenticacao_controller.dart';
+import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/models/autenticao_model.dart';
 import 'package:permuta_brasil/rotas/app_screens_path.dart';
 import 'package:permuta_brasil/utils/app_names.dart';
@@ -214,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _validateUserAndSenhaTextfield() {
+  void _validateUserAndSenhaTextfield() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
 
@@ -222,9 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      // Simulação de carga ou chamada assíncrona
-
-      //await UserController.cadastrarUser(context, usuarioModel);
+      await AutenticacaoController.logar(context, authModel);
 
       setState(() {
         _isLoading = false;

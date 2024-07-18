@@ -4,13 +4,11 @@ class ApiServices {
   //produção
   static const String intranetUrl = "";
 
-  static const String suporteDti = "";
+  static const String apiUrl = "https://permutabrasil-backend.dev.79team.com/";
 
-  static String concatIntranetUrl(String url) {
+  static String concatApiUrl(String url) {
     developer.log("", name: "Serviço de API");
 
-    return intranetUrl + url;
+    return apiUrl + url;
   }
-
-  static String concatPUrl(String url) => suporteDti + url;
 }

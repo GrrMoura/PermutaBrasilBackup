@@ -30,7 +30,6 @@ class DatabaseHelper {
       )
     ''');
 
-    // Inserir os estados brasileiros e DF
     List<String> estados = [
       'Acre',
       'Alagoas',
@@ -62,8 +61,8 @@ class DatabaseHelper {
     ];
 
     Batch batch = db.batch();
-    for (var estado in estados) {
-      batch.insert('Estados', {'nome': estado});
+    for (int i = 0; i < estados.length; i++) {
+      batch.insert('Estados', {'id': i + 1, 'nome': estados[i]});
     }
 
     await batch.commit();

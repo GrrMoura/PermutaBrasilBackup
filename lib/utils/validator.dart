@@ -211,13 +211,13 @@ ValidationResult senhaIsValid(String senha) {
   }
 
   // Verifica se há pelo menos um caractere especial
-  final RegExp caracterEspecialRegExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
-  if (!caracterEspecialRegExp.hasMatch(senha)) {
-    return ValidationResult(
-      isValid: false,
-      errorMessage: "A senha deve conter pelo menos um caractere especial",
-    );
-  }
+  // final RegExp caracterEspecialRegExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+  // if (!caracterEspecialRegExp.hasMatch(senha)) {
+  //   return ValidationResult(
+  //     isValid: false,
+  //     errorMessage: "A senha deve conter pelo menos um caractere especial",
+  //   );
+  // }
 
   // Se passar por todas as validações, a senha é considerada válida
   return ValidationResult(
