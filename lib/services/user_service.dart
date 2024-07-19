@@ -13,9 +13,7 @@ class UserService {
     );
 
     var response = await RequestService.postOptions(
-      url: url,
-      options: options,
-    );
+        url: url, options: options, data: model.toJson());
 
     return response;
   }

@@ -2,7 +2,7 @@ class EstadoModel {
   int id;
   String nome;
   String sigla;
-  String foto;
+  String? foto;
 
   EstadoModel({
     required this.id,
@@ -16,7 +16,7 @@ class EstadoModel {
       id: json['id'] as int,
       nome: json['nome'] as String,
       sigla: json['sigla'] as String,
-      foto: json['foto'] as String,
+      foto: json['foto'] as String?,
     );
   }
 

@@ -13,7 +13,7 @@ class EstadoController {
       Response response = await EstadoService.getEstados();
 
       if (response.statusCode == 200) {
-        List<dynamic> data = response.data;
+        List<dynamic> data = response.data['estados'];
         List<EstadoModel> estados = EstadoModel.fromJsonList(data);
         return estados;
       } else {

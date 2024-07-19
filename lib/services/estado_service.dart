@@ -4,7 +4,7 @@ import 'package:permuta_brasil/services/request_service.dart';
 
 class EstadoService {
   static Future<Response> getEstados() async {
-    var url = ApiServices.concatApiUrl("estado");
+    var url = ApiServices.concatApiUrl("publico/cadastrar");
 
     var options = Options(headers: {});
 
