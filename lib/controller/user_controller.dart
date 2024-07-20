@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permuta_brasil/models/autenticao_model.dart';
 import 'package:permuta_brasil/models/recuperar_senha_model.dart';
 import 'package:permuta_brasil/models/usuario_model.dart';
 import 'package:permuta_brasil/rotas/app_screens_path.dart';

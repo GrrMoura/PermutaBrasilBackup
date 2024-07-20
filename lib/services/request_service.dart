@@ -19,23 +19,6 @@ class RequestService {
       {required String url,
       Map<String, dynamic>? data,
       required Options options}) async {
-    // try {
-    //   Dio dio = Dio(BaseOptions(
-    //     connectTimeout: Duration(seconds: tempoLimite),
-    //     receiveTimeout: Duration(seconds: tempoLimite),
-    //   ));
-
-    //   // Configuração para aceitar qualquer certificado (INSEGURO! Não use em produção)
-    //   dio.interceptors.add(InterceptorsWrapper(
-    //     onRequest: (options, handler) {
-    //       // Ignora a verificação de certificado
-    //       options.headers["verify"] = false;
-    //       return handler.next(options); // prossegue com a solicitação
-    //     },
-    //   ));
-
-    //   Response response = await dio.post(url, data: data, options: options);
-    //   return response;
     try {
       Dio dio = Dio(BaseOptions(
           connectTimeout: Duration(seconds: tempoLimite),

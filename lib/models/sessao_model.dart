@@ -35,7 +35,7 @@ class Sessao {
     List<String> permissoesStrings =
         permissoes.map((perm) => perm.permissao).toList();
     prefs.setStringList("regrasAcesso", permissoesStrings);
-    prefs.setString("cpf", model.login!);
+    prefs.setString("email", model.login!);
   }
 }
 

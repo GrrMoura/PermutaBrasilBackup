@@ -4,8 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:permuta_brasil/controller/estado_controller.dart';
+import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/data/sqflite_helper.dart';
+import 'package:permuta_brasil/models/estado_instituicoes_model.dart';
 import 'package:permuta_brasil/models/estado_model.dart';
+import 'package:permuta_brasil/models/instituicao_model.dart';
 import 'package:permuta_brasil/models/usuario_model.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 import 'package:permuta_brasil/utils/mask_utils.dart';
@@ -24,13 +27,18 @@ class CadastroScreenState extends State<CadastroScreen> {
   UsuarioModel usuarioModel = UsuarioModel();
   ValidationResult result = ValidationResult();
   List<EstadoModel>? estados = [];
+  List<InstituicaoModel>? instituicoes = [];
   int _currentPage = 0;
 
   final ImagePicker _picker = ImagePicker();
   DatabaseHelper db = DatabaseHelper();
 
   int? selectedEstadoOrigemId;
+
+  int? selectedInstituicaoId;
   int? selectedEstadoDestinoId;
+  bool _obscureTextSenha = true;
+  bool _obscureTextConfirmarSenha = true;
 
   @override
   void initState() {
@@ -39,10 +47,14 @@ class CadastroScreenState extends State<CadastroScreen> {
   }
 
   Future<void> _loadEstados() async {
-    List<EstadoModel> fetchedEstados =
-        await EstadoController.getEstados(context);
+    EstadosEInstituicoes resultado = await EstadoController.getEstados(context);
+
+    List<EstadoModel> estadosPegos = resultado.estados;
+    List<InstituicaoModel> instituicoesPegas = resultado.instituicoes;
+
     setState(() {
-      estados = fetchedEstados;
+      estados = estadosPegos;
+      instituicoes = instituicoesPegas;
     });
   }
 
@@ -77,6 +89,7 @@ class CadastroScreenState extends State<CadastroScreen> {
                     child: Column(
                       children: [
                         _buildGenericTextField(
+                          init: usuarioModel.nome ?? '',
                           label: 'Nome',
                           formato: MaskUtils.padrao(),
                           onSave: (String? value) {
@@ -93,6 +106,7 @@ class CadastroScreenState extends State<CadastroScreen> {
                           prefixIcon: Icons.person,
                         ),
                         _buildGenericTextField(
+                          init: usuarioModel.cpf ?? "",
                           label: 'CPF',
                           formato: MaskUtils.maskFormatterCpf(),
                           onSave: (String? value) {
@@ -125,6 +139,7 @@ class CadastroScreenState extends State<CadastroScreen> {
                           prefixIcon: Icons.calendar_today,
                         ),
                         _buildGenericTextField(
+                          init: usuarioModel.email ?? "",
                           label: 'E-mail',
                           onSave: (String? value) {
                             usuarioModel.email = value;
@@ -139,6 +154,58 @@ class CadastroScreenState extends State<CadastroScreen> {
                           keyboardType: TextInputType.emailAddress,
                           prefixIcon: Icons.email,
                         ),
+                        _buildGenericTextField(
+                            init: usuarioModel.senha ?? "",
+                            label: 'Senha',
+                            onSave: (String? value) {
+                              usuarioModel.senha = value;
+                            },
+                            onChanged: (String? value) {
+                              usuarioModel.senha = value;
+                            },
+                            validator: (String? email) {
+                              result = senhaIsValid(email!);
+                              if (result.isValid!) {
+                                return null;
+                              }
+                              return result.errorMessage;
+                            },
+                            keyboardType: TextInputType.visiblePassword,
+                            prefixIcon: Icons.lock,
+                            funcaoObscure: () {
+                              setState(() {
+                                _obscureTextSenha = !_obscureTextSenha;
+                              });
+                            },
+                            obscureText: _obscureTextSenha),
+                        _buildGenericTextField(
+                            init: usuarioModel.confirmarSenha ?? "",
+                            label: 'Confirmar Senha',
+                            onSave: (String? value) {
+                              usuarioModel.confirmarSenha = value;
+                            },
+                            onChanged: (String? value) {
+                              usuarioModel.confirmarSenha = value;
+                            },
+                            validator: (String? confirmPassword) {
+                              if (confirmPassword == null ||
+                                  confirmPassword.isEmpty) {
+                                return 'Confirmação de senha é obrigatória';
+                              }
+                              if (confirmPassword != usuarioModel.senha) {
+                                return 'As senhas não coincidem';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            prefixIcon: Icons.lock,
+                            funcaoObscure: () {
+                              setState(() {
+                                _obscureTextConfirmarSenha =
+                                    !_obscureTextConfirmarSenha;
+                              });
+                            },
+                            obscureText: _obscureTextConfirmarSenha),
                         SizedBox(height: 30.h),
                         Row(
                           children: [
@@ -167,6 +234,19 @@ class CadastroScreenState extends State<CadastroScreen> {
                 : SingleChildScrollView(
                     child: Column(
                       children: [
+                        _buildDropdownField(
+                          icon: Icons.work,
+                          lista: instituicoes,
+                          model: instituicoes,
+                          label: 'Instituição',
+                          value: selectedInstituicaoId ?? 1,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedInstituicaoId = value;
+                              usuarioModel.instituicaoId = value;
+                            });
+                          },
+                        ),
                         _buildGenericTextField(
                           formato: MaskUtils.maskFormatterData(),
                           label: 'Data de Inclusão no Órgão',
@@ -184,6 +264,8 @@ class CadastroScreenState extends State<CadastroScreen> {
                           prefixIcon: Icons.calendar_today,
                         ),
                         _buildDropdownField(
+                          lista: estados,
+                          model: estados,
                           label: 'Estado de Origem',
                           value: selectedEstadoOrigemId ?? 1,
                           onChanged: (value) {
@@ -193,16 +275,18 @@ class CadastroScreenState extends State<CadastroScreen> {
                             });
                           },
                         ),
-                        _buildDropdownField(
-                          label: 'Estado de Destino',
-                          value: selectedEstadoDestinoId,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedEstadoDestinoId = value;
-                              usuarioModel.estadoOrigemId = value;
-                            });
-                          },
-                        ),
+                        // _buildDropdownField(
+                        //   lista: estados,
+                        //   model: estados,
+                        //   label: 'Estado de Destino',
+                        //   value: selectedEstadoDestinoId,
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       selectedEstadoDestinoId = value;
+                        //       usuarioModel.estadoOrigemId = value;
+                        //     });
+                        //   },
+                        // ),
                         SizedBox(height: 10.h),
                         //    usuarioModel.identidadeFuncional == null
                         // Container(
@@ -302,8 +386,7 @@ class CadastroScreenState extends State<CadastroScreen> {
         _isLoading = true;
       });
 
-      print(usuarioModel);
-      //  await UserController.cadastrarUser(context, usuarioModel);
+      await UserController.cadastrarUser(context, usuarioModel);
 
       setState(() {
         _isLoading = false;
@@ -311,29 +394,43 @@ class CadastroScreenState extends State<CadastroScreen> {
     }
   }
 
-  Widget _buildGenericTextField({
-    required String label,
-    required void Function(String?) onSave,
-    required String? Function(String?)? validator,
-    required IconData prefixIcon,
-    MaskTextInputFormatter? formato,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
+  Widget _buildGenericTextField(
+      {required String label,
+      required void Function(String?) onSave,
+      void Function(String?)? onChanged,
+      required String? Function(String?)? validator,
+      required IconData prefixIcon,
+      MaskTextInputFormatter? formato,
+      TextInputType keyboardType = TextInputType.text,
+      bool obscureText = false,
+      void Function()? funcaoObscure,
+      String? init}) {
     return Padding(
       key: Key(label),
       padding: EdgeInsets.only(top: 20.h),
       child: TextFormField(
+        initialValue: init,
         inputFormatters: [formato ?? MaskUtils.padrao()],
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(prefixIcon),
+          suffixIcon: label.toLowerCase().contains('senha')
+              ? IconButton(
+                  icon: Icon(
+                    obscureText ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: funcaoObscure,
+                )
+              : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         keyboardType: keyboardType,
         onSaved: onSave,
+        onChanged: onChanged,
         validator: validator,
+        obscureText: obscureText,
       ),
     );
   }
@@ -342,6 +439,9 @@ class CadastroScreenState extends State<CadastroScreen> {
     required String label,
     required int? value,
     required ValueChanged<int?> onChanged,
+    required var model,
+    required List? lista,
+    IconData? icon,
   }) {
     return Padding(
       key: Key(label),
@@ -351,17 +451,17 @@ class CadastroScreenState extends State<CadastroScreen> {
         isDense: true,
         decoration: InputDecoration(
           labelText: label, //TODO: fazer drop down e add mais de uma opcao
-          prefixIcon: const Icon(Icons.location_on),
+          prefixIcon: Icon(icon ?? Icons.location_on),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         value: value,
         onChanged: onChanged,
-        items: estados?.map((estado) {
+        items: lista?.map((model) {
           return DropdownMenuItem<int>(
-            value: estado.id,
-            child: Text(estado.nome),
+            value: model.id,
+            child: Text(model.nome),
           );
         }).toList(),
         validator: (value) {
@@ -383,7 +483,6 @@ class CadastroScreenState extends State<CadastroScreen> {
           _currentPage += 1;
         });
       } else {
-        print("passei aqui");
         _submitForm();
       }
     }

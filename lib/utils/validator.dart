@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 class ValidationResult {
   final bool? isValid;
   final String? errorMessage;
@@ -11,7 +9,7 @@ ValidationResult cpfIsValid(String? cpf) {
   if (cpf == null || cpf == '') {
     return ValidationResult(
       isValid: false,
-      errorMessage: 'Cpf',
+      errorMessage: 'Cpf precisa ser informado',
     );
   }
 
