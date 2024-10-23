@@ -30,6 +30,7 @@ class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
         ),
         centerTitle: true,
         backgroundColor: AppColors.cAccentColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -89,7 +90,7 @@ class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
                 TextButton(
                   onPressed: () {
                     // Navegar de volta para a tela de login
-                    // Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                   child: Text('Voltar ao Login',
                       style: Styles().mediumTextStyle()),

@@ -42,16 +42,14 @@ class UserController {
       Response response = await UserService.recuperarSenha(model);
 
       if (response.statusCode == 200) {
-        // Sucesso ao recuperar a senha
-
-        // context.push(AppRouterName.recuperacaoSenha);
-      } else {
-        // Tratar erros de resposta do servidor
         Generic.snackBar(
             context: context,
-            mensagem: "Um erro inesperado.",
-            tipo: AppName.erro,
+            mensagem: "Senha enviada para seu email ",
+            tipo: AppName.sucesso,
             duracao: 2);
+        context.pop();
+      } else {
+        _handleResponse(context, response);
       }
     } catch (e) {
       debugPrint('erro: $e');

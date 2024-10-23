@@ -20,7 +20,7 @@ class UserService {
 
   static Future<Response> recuperarSenha(RecuperarSenhaModel model) async {
     var url = ApiServices.concatApiUrl(
-        "Usuarios/resetarSenha"); // URL para o endpoint de cadastro de usuário
+        "publico/recuperar/senha"); // URL para o endpoint de cadastro de usuário
 
     // Montagem do cabeçalho
     var options = Options(
@@ -30,7 +30,7 @@ class UserService {
     // Envio da requisição POST com os dados do usuário
     var response = await RequestService.postOptions(
       url: url,
-      //data: UserModel.fromJson(json),
+      data: model.toJson(),
       options: options,
     );
 
