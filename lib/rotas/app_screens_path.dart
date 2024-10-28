@@ -4,4 +4,5 @@ abstract class AppRouterName {
   static const String login = '/login';
   static const String home = '/home';
   static const String selecaoEstado = '/selecaoEstado';
+  static const String matchScreen = '/matchScreen';
 }

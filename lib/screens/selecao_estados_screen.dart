@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:permuta_brasil/controller/autenticacao_controller.dart';
+import 'package:permuta_brasil/rotas/app_screens_path.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 
 class SelecaoEstadosScreen extends StatefulWidget {
@@ -92,13 +95,7 @@ class _SelecaoEstadosScreenState extends State<SelecaoEstadosScreen> {
 
   void _navegarParaProximaTela() {
     if (estadosSelecionados.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              ProximaTela(estadosSelecionados: estadosSelecionados),
-        ),
-      );
+      context.push(AppRouterName.matchScreen);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Selecione ao menos um estado!')),
