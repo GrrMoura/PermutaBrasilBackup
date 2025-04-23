@@ -10,7 +10,7 @@ import 'package:permuta_brasil/screens/cadastro/selecao_estados_screen.dart';
 class Rotas {
   Rotas();
   static final routers = GoRouter(
-    initialLocation: AppRouterName.login,
+    initialLocation: AppRouterName.homeController,
     routes: [
       GoRoute(
         path: AppRouterName.cadastro,
