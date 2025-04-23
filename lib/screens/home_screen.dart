@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 
-class MatchsScreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   final String nomeUsuario;
   final List<Map<String, String>> matchs;
 
-  const MatchsScreen({
+  const HomeScreen({
     super.key,
     required this.nomeUsuario,
     required this.matchs,

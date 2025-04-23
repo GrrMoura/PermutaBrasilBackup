@@ -7,6 +7,9 @@ import 'package:permuta_brasil/controller/autenticacao_controller.dart';
 import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/models/autenticao_model.dart';
 import 'package:permuta_brasil/rotas/app_screens_path.dart';
+import 'package:permuta_brasil/screens/widgets/loading_default.dart';
+import 'package:permuta_brasil/utils/app_colors.dart';
+import 'package:permuta_brasil/utils/app_dimens.dart';
 import 'package:permuta_brasil/utils/app_names.dart';
 import 'package:permuta_brasil/utils/mask_utils.dart';
 import 'package:permuta_brasil/utils/styles.dart';
@@ -25,11 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   AutenticacaoModel authModel = AutenticacaoModel();
   ValidationResult result = ValidationResult();
   bool _isObscured = true;
-  Timer? _hidePasswordTimer; // Timer para ocultar a senha após 5 segundos
+  Timer? _hidePasswordTimer;
 
   @override
   void dispose() {
-    _hidePasswordTimer?.cancel(); // Cancela o timer ao sair da tela
+    _hidePasswordTimer?.cancel();
     super.dispose();
   }
 
@@ -115,26 +118,28 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: label == "Email" ? false : _isObscured,
           inputFormatters: [formato ?? MaskUtils.padrao()],
           decoration: InputDecoration(
-            labelText: label,
-            prefixIcon: Icon(prefixIcon),
-            suffixIcon: label == "Senha"
-                ? IconButton(
-                    icon: Icon(
-                      _isObscured ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscured = !_isObscured;
-                      });
+              labelText: label,
+              prefixIcon: Icon(prefixIcon),
+              suffixIcon: label == "Senha"
+                  ? IconButton(
+                      icon: Icon(
+                        _isObscured ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isObscured = !_isObscured;
+                        });
 
-                      _startEsconderPasswordTimer();
-                    },
-                  )
-                : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
+                        _startEsconderPasswordTimer();
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppDimens.h1Size)),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppDimens.borda20),
+                borderSide: const BorderSide(width: 2),
+              )),
           keyboardType: keyboardType,
           onSaved: onSave,
           validator: validator,
@@ -166,7 +171,8 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text(
                 "Esqueceu senha?",
-                style: TextStyle(fontSize: 10.sp),
+                style:
+                    TextStyle(fontSize: 12.sp, color: AppColors.sShadowColor),
               )),
         ],
       ),
@@ -182,9 +188,11 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: _isLoading ? null : _validateUserAndSenhaTextfield,
             style: Styles().elevatedButtonStyle(),
             child: _isLoading
-                ? const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-                : const Text('Enviar'),
+                ? LoadingDualRing(tamanho: 20.sp)
+                : Text(
+                    'Enviar',
+                    style: TextStyle(fontSize: 13.sp),
+                  ),
           ),
         ));
   }
@@ -199,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         child: Text.rich(
           TextSpan(
-            style: TextStyle(color: Colors.black, fontSize: 10.sp),
+            style: TextStyle(color: Colors.black, fontSize: 12.sp),
             children: const [
               TextSpan(text: 'Não possui conta ?  '),
               TextSpan(

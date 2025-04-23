@@ -32,4 +32,7 @@ class AppDimens {
   static const double mediumSpace = 3.0;
   static const double smallSpace = -0.41;
   static const double largeSpace = 5.2;
+
+  // Bordas
+  static const double borda20 = 20;
 }

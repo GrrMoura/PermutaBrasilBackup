@@ -18,6 +18,21 @@ class UserService {
     return response;
   }
 
+  static Future<Response> cadastrarEstadosDeInteresse(
+      List<int> estadoIds) async {
+    var url = ApiServices.concatApiUrl("usuario/locais");
+
+    var options = Options(headers: {});
+
+    var response = await RequestService.postOptions(
+      url: url,
+      options: options,
+      data: {'locais': estadoIds},
+    );
+
+    return response;
+  }
+
   static Future<Response> recuperarSenha(RecuperarSenhaModel model) async {
     var url = ApiServices.concatApiUrl(
         "publico/recuperar/senha"); // URL para o endpoint de cadastro de usuário

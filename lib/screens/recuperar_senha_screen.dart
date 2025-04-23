@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/models/recuperar_senha_model.dart';
+import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
+import 'package:permuta_brasil/utils/app_dimens.dart';
 
 import 'package:permuta_brasil/utils/styles.dart';
 import 'package:permuta_brasil/utils/validator.dart';
@@ -80,10 +82,13 @@ class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
                     onPressed: _isLoading ? null : _submitForm,
                     style: Styles().elevatedButtonStyle(),
                     child: _isLoading
-                        ? const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white))
-                        : const Text('Enviar'),
+                        ? LoadingDualRing(
+                            tamanho: 20.sp,
+                          )
+                        : Text(
+                            'Enviar',
+                            style: TextStyle(fontSize: 13.sp),
+                          ),
                   ),
                 ),
                 SizedBox(height: 40.h),
@@ -133,7 +138,11 @@ class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
           labelText: label,
           prefixIcon: Icon(prefixIcon),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(AppDimens.borda20),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppDimens.borda20),
+            borderSide: const BorderSide(width: 2),
           ),
         ),
         keyboardType: keyboardType,

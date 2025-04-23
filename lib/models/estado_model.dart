@@ -12,11 +12,12 @@ class EstadoModel {
   });
 
   factory EstadoModel.fromJson(Map<String, dynamic> json) {
+    String foto = 'assets/images/${json['sigla'].toLowerCase()}.png';
     return EstadoModel(
       id: json['id'] as int,
       nome: json['nome'] as String,
       sigla: json['sigla'] as String,
-      foto: json['foto'] as String?,
+      foto: foto,
     );
   }
 

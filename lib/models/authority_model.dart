@@ -15,7 +15,8 @@ class AuthorityModel {
     return jsonList.map((json) => AuthorityModel.fromJson(json)).toList();
   }
 
-  static List<Map<String, dynamic>> toJsonList(List<AuthorityModel> authorities) {
+  static List<Map<String, dynamic>> toJsonList(
+      List<AuthorityModel> authorities) {
     return authorities.map((authority) => authority.toJson()).toList();
   }
 }

@@ -5,6 +5,39 @@ class ValidationResult {
   ValidationResult({this.isValid, this.errorMessage});
 }
 
+ValidationResult telefoneIsValid(String? telefone) {
+  if (telefone == null || telefone.isEmpty) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: 'Telefone precisa ser informado',
+    );
+  }
+
+  // Remove qualquer caractere que não seja número
+  var numeros = telefone.replaceAll(RegExp(r'[^0-9]'), '');
+
+  // Verifica se tem exatamente 11 dígitos
+  if (numeros.length != 11) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: 'Telefone precisa ter 11 dígitos',
+    );
+  }
+
+  // Valida se começa com 9 após o DDD (formato celular comum no Brasil)
+  if (!RegExp(r'^[1-9]{2}9[0-9]{8}$').hasMatch(numeros)) {
+    return ValidationResult(
+      isValid: false,
+      errorMessage: 'Telefone inválido (esperado DDD + 9 + número)',
+    );
+  }
+
+  return ValidationResult(
+    isValid: true,
+    errorMessage: 'Ok',
+  );
+}
+
 ValidationResult cpfIsValid(String? cpf) {
   if (cpf == null || cpf == '') {
     return ValidationResult(

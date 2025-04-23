@@ -6,6 +6,7 @@ class UsuarioModel {
   String? nome;
   String? email;
   String? cpf;
+  String? telefone;
   String? senha;
   String? confirmarSenha;
   DateTime? dataNascimento;
@@ -15,6 +16,7 @@ class UsuarioModel {
   bool? ativo;
   double? credito;
   List<PermissaoModel>? permissoes;
+  List<int>? locais;
   bool? isEnabled;
   String? username;
   List<AuthorityModel>? authorities;
@@ -24,28 +26,29 @@ class UsuarioModel {
 
   //File? identidadeFuncional;
 
-  UsuarioModel({
-    this.cpf,
-    this.id,
-    //  this.identidadeFuncional,
-    this.dataNascimento,
-    this.instituicaoId,
-    this.estadoOrigemId,
-    this.email,
-    this.dataInclusao,
-    this.confirmarSenha,
-    this.senha,
-    this.nome,
-    this.ativo,
-    this.credito,
-    this.permissoes,
-    this.isEnabled,
-    this.username,
-    this.authorities,
-    this.isAccountNonExpired,
-    this.isAccountNonLocked,
-    this.isCredentialsNonExpired,
-  });
+  UsuarioModel(
+      {this.cpf,
+      this.id,
+      //  this.identidadeFuncional,
+      this.dataNascimento,
+      this.instituicaoId,
+      this.estadoOrigemId,
+      this.email,
+      this.dataInclusao,
+      this.confirmarSenha,
+      this.senha,
+      this.nome,
+      this.ativo,
+      this.credito,
+      this.permissoes,
+      this.isEnabled,
+      this.username,
+      this.authorities,
+      this.isAccountNonExpired,
+      this.isAccountNonLocked,
+      this.isCredentialsNonExpired,
+      this.telefone,
+      this.locais});
 
   Map<String, dynamic> toJson() => {
         'cpf': cpf,
@@ -57,9 +60,11 @@ class UsuarioModel {
         'dataInclusao': dataInclusao!.toIso8601String(),
         'nome': nome,
         'senha': senha,
+        'telefone': telefone,
         'id': id,
         'ativo': ativo,
         'credito': credito,
+        'locais': locais,
         'permissoes': PermissaoModel.toJsonList(permissoes ?? []),
         'isEnabled': isEnabled,
         'username': username,
@@ -74,7 +79,9 @@ class UsuarioModel {
       ativo: json['ativo'],
       cpf: json['cpf'],
       id: json['id'],
+      telefone: json['telefone'],
       nome: json['nome'],
+      locais: json['locais'] != null ? List<int>.from(json['locais']) : [],
       // identidadeFuncional: json['identidadeFuncional'],
       dataNascimento: DateTime.parse(json['dataNascimento']),
       //  instituicoesId: List<int>.from(json['instituicoesId'] ?? []),

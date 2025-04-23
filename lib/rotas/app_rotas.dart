@@ -1,16 +1,16 @@
 import 'package:go_router/go_router.dart';
 import 'package:permuta_brasil/rotas/app_screens_path.dart';
-import 'package:permuta_brasil/screens/cadastrar_screen.dart';
+import 'package:permuta_brasil/screens/cadastro/cadastrar_screen.dart';
 import 'package:permuta_brasil/screens/home_controller.dart';
 import 'package:permuta_brasil/screens/login_screen.dart';
-import 'package:permuta_brasil/screens/macth_screen.dart';
+import 'package:permuta_brasil/screens/home_screen.dart';
 import 'package:permuta_brasil/screens/recuperar_senha_screen.dart';
-import 'package:permuta_brasil/screens/selecao_estados_screen.dart';
+import 'package:permuta_brasil/screens/cadastro/selecao_estados_screen.dart';
 
 class Rotas {
   Rotas();
   static final routers = GoRouter(
-    initialLocation: AppRouterName.selecaoEstado,
+    initialLocation: AppRouterName.login,
     routes: [
       GoRoute(
         path: AppRouterName.cadastro,
@@ -25,9 +25,9 @@ class Rotas {
         builder: (context, state) => (const LoginScreen()),
       ),
       GoRoute(
-        path: AppRouterName.matchScreen,
+        path: AppRouterName.homeScreen,
         builder: (context, state) {
-          return (const MatchsScreen(
+          return (const HomeScreen(
             nomeUsuario: "Roberto Rocha",
             matchs: [
               {
@@ -53,7 +53,7 @@ class Rotas {
         },
       ),
       GoRoute(
-        path: AppRouterName.home,
+        path: AppRouterName.homeController,
         builder: (context, state) => (const HomeControler()),
       ),
       GoRoute(
