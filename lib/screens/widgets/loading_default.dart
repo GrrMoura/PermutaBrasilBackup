@@ -73,5 +73,3 @@ class LoadingDualRing extends StatelessWidget {
         duration: const Duration(milliseconds: 1000));
   }
 }
-
-// SpinKitFadingCube SpinKitDualRing SpinKitHourGlass

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/models/plano_model.dart';
+import 'package:permuta_brasil/rotas/app_screens_path.dart';
 import 'package:permuta_brasil/screens/widgets/app_bar.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
@@ -15,6 +17,8 @@ class PlanoScreen extends StatefulWidget {
 class _PlanoScreenState extends State<PlanoScreen> {
   bool isOcupado = true;
   List<PlanoModel> planos = [];
+
+  UserController userCtlr = UserController();
   @override
   void initState() {
     _buscarPlanos();
@@ -124,8 +128,8 @@ class _PlanoScreenState extends State<PlanoScreen> {
     required BuildContext context,
   }) {
     return InkWell(
-        onTap: () {
-          //   context.push(AppRouterName.pagamentoController, extra: plano);
+        onTap: () async {
+          context.push(AppRouterName.pagamentoPixScreen, extra: plano);
         },
         borderRadius: BorderRadius.circular(20.r),
         child: Container(

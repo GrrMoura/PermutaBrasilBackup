@@ -9,7 +9,7 @@ class PlanoModel {
 
   factory PlanoModel.fromJson(Map<String, dynamic> json) {
     return PlanoModel(
-      id: json['Id'],
+      id: json['id'],
       nome: json['nome'],
       ativo: json['ativo'],
       descricao: json['descricao'],

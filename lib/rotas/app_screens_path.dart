@@ -6,4 +6,5 @@ abstract class AppRouterName {
   static const String selecaoEstado = '/selecaoEstado';
   static const String homeScreen = '/homeScreen';
   static const String planoScreen = '/planoScreen';
+  static const String pagamentoPixScreen = '/pagamentoPixScreen';
 }

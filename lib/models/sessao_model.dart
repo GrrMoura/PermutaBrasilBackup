@@ -32,7 +32,7 @@ class Sessao {
     prefs.setString(PrefsKey.authToken, token);
     prefs.setBool("ativo", usuario.ativo);
     prefs.setString("nomeUsuario", usuario.nome);
-    prefs.setInt("id", usuario.id);
+    prefs.setInt(PrefsKey.userId, usuario.id);
     List<String> permissoesStrings =
         permissoes.map((perm) => perm.permissao).toList();
     prefs.setStringList("regrasAcesso", permissoesStrings);
