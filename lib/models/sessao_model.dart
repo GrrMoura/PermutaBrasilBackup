@@ -1,4 +1,5 @@
 import 'package:permuta_brasil/models/autenticao_model.dart';
+import 'package:permuta_brasil/utils/app_constantes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Sessao {
@@ -28,7 +29,7 @@ class Sessao {
     );
   }
   void setSession(SharedPreferences prefs, AutenticacaoModel model) {
-    prefs.setString("token", token);
+    prefs.setString(PrefsKey.authToken, token);
     prefs.setBool("ativo", usuario.ativo);
     prefs.setString("nomeUsuario", usuario.nome);
     prefs.setInt("id", usuario.id);

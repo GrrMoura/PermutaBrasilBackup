@@ -157,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMatchCard(Map<String, String> match) {
     return Card(
+      color: Colors.white,
       elevation: 5,
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       shape: RoundedRectangleBorder(

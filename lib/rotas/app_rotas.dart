@@ -4,13 +4,14 @@ import 'package:permuta_brasil/screens/cadastro/cadastrar_screen.dart';
 import 'package:permuta_brasil/screens/home_controller.dart';
 import 'package:permuta_brasil/screens/login_screen.dart';
 import 'package:permuta_brasil/screens/home_screen.dart';
+import 'package:permuta_brasil/screens/pagamento/planos_screen.dart';
 import 'package:permuta_brasil/screens/recuperar_senha_screen.dart';
 import 'package:permuta_brasil/screens/cadastro/selecao_estados_screen.dart';
 
 class Rotas {
   Rotas();
   static final routers = GoRouter(
-    initialLocation: AppRouterName.homeController,
+    initialLocation: AppRouterName.login,
     routes: [
       GoRoute(
         path: AppRouterName.cadastro,
@@ -19,6 +20,10 @@ class Rotas {
       GoRoute(
         path: AppRouterName.recuperarSenha,
         builder: (context, state) => (const RecuperarSenhaScreen()),
+      ),
+      GoRoute(
+        path: AppRouterName.planoScreen,
+        builder: (context, state) => (const PlanoScreen()),
       ),
       GoRoute(
         path: AppRouterName.login,

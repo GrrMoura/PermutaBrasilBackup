@@ -17,3 +17,8 @@ class AppName {
   static const String permissaoGPS =
       "Erro-Permissão para uso do GPS negada ou Serviço de localização desativado";
 }
+
+class PrefsKey {
+//* #REGION-USUÁRIO
+  static const String authToken = 'authToken';
+}

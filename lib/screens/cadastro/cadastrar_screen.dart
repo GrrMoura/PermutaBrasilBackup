@@ -537,9 +537,7 @@ class CadastroScreenState extends State<CadastroScreen> {
         _isLoading = true;
       });
 
-      print(usuarioModel.locais.toString());
-
-      // await UserController.cadastrarUser(context, usuarioModel);
+      await UserController.cadastrarUser(context, usuarioModel);
 
       setState(() {
         _isLoading = false;

@@ -10,7 +10,7 @@ import 'package:permuta_brasil/rotas/app_screens_path.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 import 'package:permuta_brasil/utils/app_dimens.dart';
-import 'package:permuta_brasil/utils/app_names.dart';
+import 'package:permuta_brasil/utils/app_constantes.dart';
 import 'package:permuta_brasil/utils/mask_utils.dart';
 import 'package:permuta_brasil/utils/styles.dart';
 import 'package:permuta_brasil/utils/validator.dart';

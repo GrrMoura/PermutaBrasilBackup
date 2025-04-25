@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:permuta_brasil/models/autenticao_model.dart';
 import 'package:permuta_brasil/services/api_service.dart';
 import 'package:permuta_brasil/services/request_service.dart';
+import 'package:permuta_brasil/utils/app_constantes.dart';
+import 'package:permuta_brasil/utils/enums/enums.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AutenticacaoService {
   static Future<Response> logar(AutenticacaoModel model) async {
@@ -13,5 +16,31 @@ class AutenticacaoService {
         url: url, data: model.toJson(), options: options);
 
     return response;
+  }
+
+  static Future<Options> getCabecalho(TipoCabecalho tipo) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString(PrefsKey.authToken) ?? "";
+    Map<String, dynamic> headers = {"Accept": "application/json"};
+    // Cabeçalhos padrões
+    switch (tipo) {
+      case TipoCabecalho.autenticacao:
+        headers["Content-Type"] = "application/json";
+        break;
+      case TipoCabecalho.multparte:
+        headers["Content-Type"] = "multipart/form-data";
+        if (token.isNotEmpty) {
+          headers["Authorization"] = "Bearer $token";
+        }
+        break;
+      case TipoCabecalho.requisicao:
+        headers["Content-Type"] = "application/json";
+        if (token.isNotEmpty) {
+          headers["Authorization"] = "Bearer $token";
+        }
+        break;
+    }
+
+    return Options(headers: headers);
   }
 }

@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permuta_brasil/models/plano_model.dart';
 import 'package:permuta_brasil/models/recuperar_senha_model.dart';
 import 'package:permuta_brasil/models/usuario_model.dart';
 import 'package:permuta_brasil/services/dispositivo_service.dart';
-import 'package:permuta_brasil/utils/app_names.dart';
+import 'package:permuta_brasil/utils/app_constantes.dart';
 import 'package:permuta_brasil/utils/app_snack_bar.dart';
 import 'package:permuta_brasil/utils/erro_handler.dart';
 import '../services/user_service.dart';
@@ -73,5 +74,21 @@ class UserController {
         tipo: AppName.sucesso,
         duracao: 2);
     context.pop();
+  }
+
+  static Future<List<PlanoModel>?> pegarPlanos(BuildContext context) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return null;
+    }
+
+    Response response = await UserService.pegarPlanos();
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return null;
+    }
+
+    List<dynamic> data = response.data;
+    return data.map((item) => PlanoModel.fromJson(item)).toList();
   }
 }

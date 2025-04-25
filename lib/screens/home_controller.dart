@@ -2,6 +2,8 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:permuta_brasil/screens/config_screen.dart';
 import 'package:permuta_brasil/screens/home_screen.dart';
+import 'package:permuta_brasil/screens/pagamento/planos_screen.dart';
+import 'package:permuta_brasil/utils/app_colors.dart';
 
 class HomeControler extends StatefulWidget {
   const HomeControler({super.key});
@@ -38,6 +40,7 @@ class _HomePageState extends State<HomeControler> {
       ],
     ),
     const ConfigScreen(),
+    const PlanoScreen(),
   ];
 
   @override
@@ -46,14 +49,16 @@ class _HomePageState extends State<HomeControler> {
         body: _pageList[selectedPage],
         bottomNavigationBar: ConvexAppBar(
           shadowColor: Colors.black,
-          activeColor: const Color(0xffa0c2ed),
-          backgroundColor: const Color(0xff00296b),
+          activeColor: Colors.white,
+          //backgroundColor: const Color(0xff00296b),
+          backgroundColor: AppColors.cAccentColor,
           elevation: 2,
           color: const Color(0xffc8dbf8),
           style: TabStyle.reactCircle,
           items: const [
             TabItem(icon: Icons.home),
             TabItem(icon: Icons.person),
+            TabItem(icon: Icons.add_a_photo),
           ],
           initialActiveIndex: selectedPage,
           onTap: (int index) {
