@@ -1,0 +1,2 @@
+C:/Repositorios/PermutaBrasilBackup/android/app/.cxx/Debug/5t191j2p/x86/CMakeFiles/edit_cache.dir
+C:/Repositorios/PermutaBrasilBackup/android/app/.cxx/Debug/5t191j2p/x86/CMakeFiles/rebuild_cache.dir

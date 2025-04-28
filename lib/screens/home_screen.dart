@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/models/contato_model.dart';
 import 'package:permuta_brasil/models/foto_model.dart';
 import 'package:permuta_brasil/models/propaganda_model.dart';
 import 'package:permuta_brasil/provider/matches_notifier.dart';
-import 'package:permuta_brasil/provider/matches_provider.dart';
+import 'package:permuta_brasil/screens/widgets/confirmar_debito.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/services/dispositivo_service.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
@@ -35,7 +34,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     getMatches();
   }
 
-  List<MatchViewModel>? matches;
+  Future<void> getMatches() async {
+    final matches = ref.read(matchesProvider);
+    final ultimaRequisicao =
+        ref.read(matchesProvider.notifier).ultimaRequisicao;
+
+    final now = DateTime.now();
+
+    if (matches.isNotEmpty &&
+        ultimaRequisicao != null &&
+        now.difference(ultimaRequisicao).inMinutes < 10) {
+      setState(() {
+        isOcupado = false;
+      });
+      return;
+    }
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return;
+    }
+
+    try {
+      await ref.read(matchesProvider.notifier).carregarMatches();
+      setState(() {
+        isOcupado = false;
+      });
+    } catch (erro) {
+      setState(() {
+        isOcupado = false;
+      });
+      if (erro is Response) {
+        ErroHandler.tratarErro(context, erro);
+      } else {
+        Generic.snackBar(
+            context: context, mensagem: "Erro inesperado", duracao: 3);
+      }
+    }
+  }
+
   String? nome;
   bool isOcupado = true;
   List<PropagandaViewModel> propagandasBanco = [
@@ -106,6 +141,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final matches = ref.watch(matchesProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       appBar: _buildAppBar(),
@@ -113,8 +149,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ? const LoadingDualRing()
           : Column(
               children: [
-                _buildHeader(matches?.length ?? 0),
-                Expanded(child: _buildMatchList()),
+                _buildHeader(matches.length),
+                Expanded(child: _buildMatchList(matches)),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.h),
                   child: _buildPropagandas(),
@@ -140,7 +176,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 12.0.h),
       child: Text(
-        "Você encontrou $matchLength ${matchLength == 1 ? 'match' : 'matches'}!",
+        textoPermutas(matchLength),
         style: TextStyle(
           fontSize: 20.sp,
           fontWeight: FontWeight.w600,
@@ -149,6 +185,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  String textoPermutas(int matchLength) {
+    if (matchLength == 0) {
+      return "Nenhuma oportunidade encontrada.";
+    } else if (matchLength == 1) {
+      return "$matchLength oportunidade de permuta";
+    } else {
+      return "$matchLength oportunidades de permuta";
+    }
   }
 
   SizedBox _buildPropagandas() {
@@ -160,11 +206,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  ListView _buildMatchList() {
+  ListView _buildMatchList(List<MatchViewModel> matches) {
     return ListView.builder(
-      itemCount: matches?.length,
+      itemCount: matches.length,
       itemBuilder: (context, index) {
-        final match = matches?[index];
+        final match = matches[index];
         return _buildMatchCard(match);
       },
     );
@@ -202,8 +248,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () {
-                    // abrir whatsapp
+                  onPressed: () async {
+                    bool? confirmar =
+                        await ConfirmarDebitoDialog.mostrar(context);
+                    if (confirmar == true) {
+                      _realizarDebito();
+                    }
                   },
                   icon: Icon(
                     FontAwesomeIcons.whatsapp,
@@ -212,12 +262,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    // fazer ligação
+                  onPressed: () async {
+                    bool? confirmar =
+                        await ConfirmarDebitoDialog.mostrar(context);
+                    if (confirmar == true) {
+                      _realizarDebito();
+                    }
                   },
                   icon: Icon(
                     FontAwesomeIcons.phone,
-                    size: 20.sp,
+                    size: 18.sp,
                     color: Colors.green,
                   ),
                 ),
@@ -319,27 +373,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     nome = prefs.getString(PrefsKey.userName);
   }
 
-  Future<void> getMatches() async {
-    final conectado =
-        await DispositivoService.verificarConexaoComFeedback(context);
-
-    if (!conectado) {
-      return;
-    }
-
-    try {
-      await ref.read(matchesProvider.notifier).carregarMatches();
-    } catch (erro) {
-      if (erro is Response) {
-        ErroHandler.tratarErro(context, erro);
-      } else {
-        // Caso dê um erro diferente e inesperado
-        Generic.snackBar(
-            context: context, mensagem: "Erro inesperado", duracao: 3);
-      }
-    }
-  }
-
   String formatarNome(String? nomeCompleto) {
     if (nomeCompleto == null || nomeCompleto.trim().isEmpty) {
       return '';
@@ -350,6 +383,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
     return "${partes.first.toUpperCase()} ${partes.last.toUpperCase()}";
   }
+
+  void _realizarDebito() {}
 
 //   Widget _buildExtraInfo(Map<String, String> match) {
 //     return Column(

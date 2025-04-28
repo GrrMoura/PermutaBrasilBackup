@@ -5,6 +5,9 @@ import 'package:permuta_brasil/viewModel/match_view_model.dart';
 class MatchesNotifier extends StateNotifier<List<MatchViewModel>> {
   MatchesNotifier() : super([]);
 
+  DateTime? _ultimaRequisicao;
+
+  DateTime? get ultimaRequisicao => _ultimaRequisicao;
   Future<void> carregarMatches() async {
     final response = await UserService.getMatches();
 
@@ -13,9 +16,9 @@ class MatchesNotifier extends StateNotifier<List<MatchViewModel>> {
       state = data
           .map((item) => MatchViewModel.fromJson(item['profissional']))
           .toList();
+      _ultimaRequisicao = DateTime.now();
     } else {
-      throw Exception(
-          'Erro ao buscar matches'); // Agora erro é lançado para ser tratado no Widget
+      throw Exception('Erro ao buscar matches');
     }
   }
 }

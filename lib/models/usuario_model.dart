@@ -1,6 +1,3 @@
-import 'package:permuta_brasil/models/authority_model.dart';
-import 'package:permuta_brasil/models/permissao_model.dart';
-
 class UsuarioModel {
   int? id;
   String? nome;

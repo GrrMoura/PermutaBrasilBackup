@@ -13,6 +13,7 @@ import 'package:permuta_brasil/models/usuario_model.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 import 'package:permuta_brasil/utils/app_dimens.dart';
+import 'package:permuta_brasil/utils/app_snack_bar.dart';
 import 'package:permuta_brasil/utils/mask_utils.dart';
 import 'package:permuta_brasil/utils/validator.dart';
 
@@ -94,36 +95,39 @@ class CadastroScreenState extends State<CadastroScreen> {
         key: _formKey,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
-          child: Column(
-            children: [
-              if (_currentPage == 2) _buildTitulo(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.65,
-                        child: _paginas[_currentPage],
+          child: _isLoading
+              ? const LoadingDualRing()
+              : Column(
+                  children: [
+                    if (_currentPage == 2) _buildTitulo(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.75,
+                              child: _paginas[_currentPage],
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    if (_currentPage == 2)
+                      if (estadosSelecionados.isNotEmpty) _buildSelecionados(),
+                    // botão fixo no rodapé
+                    Padding(
+                      padding:
+                          EdgeInsets.only(bottom: 5.h, left: 10.w, right: 10.w),
+                      child: NavegacaoButtons(
+                        paginaLength: _paginas.length,
+                        currentPage: _currentPage,
+                        onNext: _proxima,
+                        onPrevious: _voltar,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              if (_currentPage == 2)
-                if (estadosSelecionados.isNotEmpty) _buildSelecionados(),
-              // botão fixo no rodapé
-              Padding(
-                padding: EdgeInsets.only(bottom: 5.h, left: 10.w, right: 10.w),
-                child: NavegacaoButtons(
-                  paginaLength: _paginas.length,
-                  currentPage: _currentPage,
-                  onNext: _proxima,
-                  onPrevious: _voltar,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -533,10 +537,15 @@ class CadastroScreenState extends State<CadastroScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
 
+      if (usuarioModel.locais == null || usuarioModel.locais!.isEmpty) {
+        Generic.snackBar(
+            context: context,
+            mensagem: "Por favor, escolha no mínimo um local.");
+        return;
+      }
       setState(() {
         _isLoading = true;
       });
-
       await UserController.cadastrarUser(context, usuarioModel);
 
       setState(() {
