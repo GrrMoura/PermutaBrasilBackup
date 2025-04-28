@@ -10,6 +10,7 @@ import 'package:permuta_brasil/models/estado_instituicoes_model.dart';
 import 'package:permuta_brasil/models/estado_model.dart';
 import 'package:permuta_brasil/models/instituicao_model.dart';
 import 'package:permuta_brasil/models/usuario_model.dart';
+import 'package:permuta_brasil/screens/cadastro/termos_screen.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 import 'package:permuta_brasil/utils/app_dimens.dart';
@@ -546,7 +547,18 @@ class CadastroScreenState extends State<CadastroScreen> {
       setState(() {
         _isLoading = true;
       });
-      await UserController.cadastrarUser(context, usuarioModel);
+
+      final aceitouTodosOsTermos = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const TermosCadastroPage(),
+        ),
+      );
+
+      if (aceitouTodosOsTermos == true) {
+        print('aceitou');
+        //   await UserController.cadastrarUser(context, usuarioModel);
+      }
 
       setState(() {
         _isLoading = false;
