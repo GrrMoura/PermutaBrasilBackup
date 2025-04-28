@@ -1,29 +1,43 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/models/contato_model.dart';
 import 'package:permuta_brasil/models/foto_model.dart';
 import 'package:permuta_brasil/models/propaganda_model.dart';
-import 'package:permuta_brasil/rotas/app_screens_path.dart';
+import 'package:permuta_brasil/provider/matches_notifier.dart';
+import 'package:permuta_brasil/provider/matches_provider.dart';
+import 'package:permuta_brasil/screens/widgets/loading_default.dart';
+import 'package:permuta_brasil/services/dispositivo_service.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
+import 'package:permuta_brasil/utils/app_constantes.dart';
+import 'package:permuta_brasil/utils/app_snack_bar.dart';
+import 'package:permuta_brasil/utils/erro_handler.dart';
+import 'package:permuta_brasil/viewModel/match_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatefulWidget {
-  final String nomeUsuario;
-  final List<Map<String, String>> matchs;
-
-  const HomeScreen({
-    super.key,
-    required this.nomeUsuario,
-    required this.matchs,
-  });
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getName();
+    getMatches();
+  }
+
+  List<MatchViewModel>? matches;
+  String? nome;
+  bool isOcupado = true;
   List<PropagandaViewModel> propagandasBanco = [
     PropagandaViewModel(
       propagandaId: 1,
@@ -92,46 +106,47 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isFuncionalVerificada = false;
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       appBar: _buildAppBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          Expanded(child: _buildMatchList()),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.h),
-            child: _buildPropagandas(),
-          )
-        ],
-      ),
+      body: isOcupado
+          ? const LoadingDualRing()
+          : Column(
+              children: [
+                _buildHeader(matches?.length ?? 0),
+                Expanded(child: _buildMatchList()),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: _buildPropagandas(),
+                )
+              ],
+            ),
     );
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       title: Text(
-        "Bem-vindo, ${widget.nomeUsuario}",
+        isOcupado ? "Bem-vindo" : "Bem-vindo, ${formatarNome(nome)}",
         style: const TextStyle(color: Colors.white),
       ),
       centerTitle: true,
       backgroundColor: AppColors.cAccentColor,
-      iconTheme: const IconThemeData(color: Colors.white),
+      automaticallyImplyLeading: false,
     );
   }
 
-  Padding _buildHeader() {
+  Padding _buildHeader(int matchLength) {
     return Padding(
-      padding: EdgeInsets.all(10.0.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 12.0.h),
       child: Text(
-        "Matchs:",
+        "Você encontrou $matchLength ${matchLength == 1 ? 'match' : 'matches'}!",
         style: TextStyle(
           fontSize: 20.sp,
-          fontWeight: FontWeight.bold,
-          color: Colors.teal,
+          fontWeight: FontWeight.w600,
+          color: Colors.teal[700],
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -147,15 +162,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ListView _buildMatchList() {
     return ListView.builder(
-      itemCount: widget.matchs.length,
+      itemCount: matches?.length,
       itemBuilder: (context, index) {
-        final match = widget.matchs[index];
+        final match = matches?[index];
         return _buildMatchCard(match);
       },
     );
   }
 
-  Widget _buildMatchCard(Map<String, String> match) {
+  Widget _buildMatchCard(MatchViewModel? match) {
     return Card(
       color: Colors.white,
       elevation: 5,
@@ -168,19 +183,18 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildStateImage(match['imagem']!),
+            _buildStateImage(match?.estado.foto ?? ""),
             SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildMatchName(match['nome'] ?? ''),
+                  _buildMatchName(match?.usuario.nome ?? ''),
                   SizedBox(height: 6.h),
-                  _buildMatchInfoRow(Icons.map, "Estado", match['estado']),
-                  _buildMatchInfoRow(Icons.military_tech, "Graduação",
-                      match['graduacao'] ?? 'Cabo'),
+                  _buildMatchInfoRow(Icons.map, "Estado", match?.estado.sigla),
+                  _buildMatchInfoRow(Icons.military_tech, "Graduação", "Cabo"),
                   _buildMatchInfoRow(Icons.access_time, "Tempo de serviço",
-                      match['tempoServico'] ?? "12 anos"),
+                      _calcularTempoServico(match?.dataInclusao)),
                 ],
               ),
             ),
@@ -216,6 +230,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStateImage(String imagePath) {
+    if (imagePath.isEmpty) {
+      return const SizedBox(
+        height: 65,
+        width: 65,
+      );
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Image.asset(
@@ -268,6 +288,69 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  String _calcularTempoServico(List<int>? dataInclusao) {
+    if (dataInclusao == null || dataInclusao.length < 3) {
+      return "Data de inclusão inválida";
+    }
+    DateTime dataInicio =
+        DateTime(dataInclusao[0], dataInclusao[1], dataInclusao[2]);
+    DateTime dataAtual = DateTime.now();
+
+    int anos = dataAtual.year - dataInicio.year;
+
+    if (dataAtual.month < dataInicio.month ||
+        (dataAtual.month == dataInicio.month &&
+            dataAtual.day < dataInicio.day)) {
+      anos--;
+    }
+
+    // Formata o texto de retorno
+    if (anos == 0) {
+      return "Menos de 1 ano";
+    } else if (anos == 1) {
+      return "1 ano";
+    } else {
+      return "$anos anos";
+    }
+  }
+
+  Future<void> getName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    nome = prefs.getString(PrefsKey.userName);
+  }
+
+  Future<void> getMatches() async {
+    final conectado =
+        await DispositivoService.verificarConexaoComFeedback(context);
+
+    if (!conectado) {
+      return;
+    }
+
+    try {
+      await ref.read(matchesProvider.notifier).carregarMatches();
+    } catch (erro) {
+      if (erro is Response) {
+        ErroHandler.tratarErro(context, erro);
+      } else {
+        // Caso dê um erro diferente e inesperado
+        Generic.snackBar(
+            context: context, mensagem: "Erro inesperado", duracao: 3);
+      }
+    }
+  }
+
+  String formatarNome(String? nomeCompleto) {
+    if (nomeCompleto == null || nomeCompleto.trim().isEmpty) {
+      return '';
+    }
+    List<String> partes = nomeCompleto.trim().split(' ');
+    if (partes.length == 1) {
+      return partes[0].toUpperCase();
+    }
+    return "${partes.first.toUpperCase()} ${partes.last.toUpperCase()}";
+  }
+
 //   Widget _buildExtraInfo(Map<String, String> match) {
 //     return Column(
 //       crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,8 +389,8 @@ class PropagandaCarousel extends StatelessWidget {
               imageUrl: propaganda.fotoModel!.first.url!,
               fit: BoxFit.cover,
               width: double.infinity,
-              placeholder: (context, url) => const Center(
-                child: CircularProgressIndicator(),
+              placeholder: (context, url) => Center(
+                child: LoadingDualRing(tamanho: 20.sp),
               ),
               errorWidget: (context, url, error) => Container(
                 color: Colors.grey[300],

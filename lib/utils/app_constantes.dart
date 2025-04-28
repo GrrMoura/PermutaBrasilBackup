@@ -20,6 +20,8 @@ class AppName {
 
 class PrefsKey {
 //* #REGION-USUÁRIO
-  static const String authToken = 'authToken';
-  static const String userId = 'id';
+  static const String authToken = 'aaa1';
+  static const String userId = 'aaa2';
+  static const String userName = 'aaa4';
+  static const String email = 'aaa3';
 }

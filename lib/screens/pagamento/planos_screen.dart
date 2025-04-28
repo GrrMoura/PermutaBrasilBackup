@@ -21,8 +21,8 @@ class _PlanoScreenState extends State<PlanoScreen> {
   UserController userCtlr = UserController();
   @override
   void initState() {
-    _buscarPlanos();
     super.initState();
+    _buscarPlanos();
   }
 
   Future<void> _buscarPlanos() async {
@@ -46,7 +46,7 @@ class _PlanoScreenState extends State<PlanoScreen> {
               children: [
                 Padding(
                     padding: EdgeInsets.only(top: 40.h),
-                    child: const LoadingHourGlass(tamanho: 120)),
+                    child: const LoadingDualRing(tamanho: 120)),
               ],
             )
           : planos.isEmpty

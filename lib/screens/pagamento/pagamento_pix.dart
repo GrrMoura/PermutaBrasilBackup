@@ -29,8 +29,8 @@ class _PagamentoPixState extends State<PagamentoPix> {
   String pixCode = "Clique no botão para gerar o PIX";
   @override
   void initState() {
-    _carregarPayload();
     super.initState();
+    _carregarPayload();
   }
 
   Future<void> _carregarPayload() async {
@@ -226,7 +226,7 @@ class _PagamentoPixState extends State<PagamentoPix> {
                   ],
                 ),
                 child: carregandoPix
-                    ? LoadingHourGlass(tamanho: 40.sp)
+                    ? LoadingDualRing(tamanho: 40.sp)
                     : SelectableText(
                         pixCode,
                         style: GoogleFonts.robotoMono(

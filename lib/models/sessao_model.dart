@@ -31,7 +31,7 @@ class Sessao {
   void setSession(SharedPreferences prefs, AutenticacaoModel model) {
     prefs.setString(PrefsKey.authToken, token);
     prefs.setBool("ativo", usuario.ativo);
-    prefs.setString("nomeUsuario", usuario.nome);
+    prefs.setString(PrefsKey.userName, usuario.nome);
     prefs.setInt(PrefsKey.userId, usuario.id);
     List<String> permissoesStrings =
         permissoes.map((perm) => perm.permissao).toList();

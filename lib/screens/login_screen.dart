@@ -62,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     _buildGenericTextField(
                       prefixIcon: Icons.email,
+                      initialValue: "geibison@hotmail.com",
                       label: "Email",
                       onSave: (String? value) {
                         authModel.login = value;
@@ -76,6 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     _buildGenericTextField(
                       prefixIcon: Icons.lock,
+                      initialValue: "d1i2e3g4?",
                       label: "Senha",
                       onSave: (String? value) {
                         authModel.senha = value;
@@ -106,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required void Function(String?) onSave,
     required String? Function(String?)? validator,
     required IconData prefixIcon,
+    required String? initialValue,
     MaskTextInputFormatter? formato,
     TextInputType keyboardType = TextInputType.text,
   }) {
@@ -115,6 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
         key: Key(label),
         padding: EdgeInsets.only(top: 8.h),
         child: TextFormField(
+          initialValue: initialValue,
           obscureText: label == "Email" ? false : _isObscured,
           inputFormatters: [formato ?? MaskUtils.padrao()],
           decoration: InputDecoration(

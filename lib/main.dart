@@ -7,20 +7,20 @@ import 'package:permuta_brasil/services/firebase_messagin_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: "",
-          appId: "",
-          messagingSenderId: 'sendid',
-          projectId: "",
-          storageBucket: ""));
+  // await Firebase.initializeApp(
+  //     options: const FirebaseOptions(
+  //         apiKey: "",
+  //         appId: "",
+  //         messagingSenderId: 'sendid',
+  //         projectId: "",
+  //         storageBucket: ""));
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  final firebaseMessagingService = FirebaseMessagingService();
-  await firebaseMessagingService.initialize();
+  // final firebaseMessagingService = FirebaseMessagingService();
+  // await firebaseMessagingService.initialize();
 
-  const MyApp();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -29,6 +29,17 @@ class UserService {
     return response;
   }
 
+  static Future<Response> getMatches() async {
+    var url = ApiServices.concatApiUrl("usuario/matches");
+
+    var options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
+
+    var response = await RequestService.getOptions(url: url, options: options);
+
+    return response;
+  }
+
   static Future<Response> cadastrarEstadosDeInteresse(
       List<int> estadoIds) async {
     var url = ApiServices.concatApiUrl("usuario/locais");

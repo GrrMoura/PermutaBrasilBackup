@@ -9,6 +9,7 @@ import 'package:permuta_brasil/services/dispositivo_service.dart';
 import 'package:permuta_brasil/utils/app_constantes.dart';
 import 'package:permuta_brasil/utils/app_snack_bar.dart';
 import 'package:permuta_brasil/utils/erro_handler.dart';
+import 'package:permuta_brasil/viewModel/match_view_model.dart';
 import '../services/user_service.dart';
 import 'package:dio/dio.dart';
 
@@ -90,5 +91,23 @@ class UserController {
 
     List<dynamic> data = response.data;
     return data.map((item) => PlanoModel.fromJson(item)).toList();
+  }
+
+  static Future<List<MatchViewModel>?> getMatches(BuildContext context) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return null;
+    }
+
+    Response response = await UserService.getMatches();
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return null;
+    }
+
+    List<dynamic> data = response.data;
+    return data
+        .map((item) => MatchViewModel.fromJson(item['profissional']))
+        .toList();
   }
 }

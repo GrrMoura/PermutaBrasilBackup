@@ -15,11 +15,11 @@ class UsuarioModel {
   int? instituicaoId;
   bool? ativo;
   double? credito;
-  List<PermissaoModel>? permissoes;
+  // List<PermissaoModel>? permissoes;
   List<int>? locais;
   bool? isEnabled;
   String? username;
-  List<AuthorityModel>? authorities;
+  // List<AuthorityModel>? authorities;
   bool? isAccountNonExpired;
   bool? isAccountNonLocked;
   bool? isCredentialsNonExpired;
@@ -40,10 +40,10 @@ class UsuarioModel {
       this.nome,
       this.ativo,
       this.credito,
-      this.permissoes,
+      // this.permissoes,
       this.isEnabled,
       this.username,
-      this.authorities,
+      //  this.authorities,
       this.isAccountNonExpired,
       this.isAccountNonLocked,
       this.isCredentialsNonExpired,
@@ -65,10 +65,10 @@ class UsuarioModel {
         'ativo': ativo,
         'credito': credito,
         'locais': locais,
-        'permissoes': PermissaoModel.toJsonList(permissoes ?? []),
+        //   'permissoes': PermissaoModel.toJsonList(permissoes ?? []),
         'isEnabled': isEnabled,
         'username': username,
-        'authorities': AuthorityModel.toJsonList(authorities ?? []),
+        //   'authorities': AuthorityModel.toJsonList(authorities ?? []),
         'isAccountNonExpired': isAccountNonExpired,
         'isAccountNonLocked': isAccountNonLocked,
         'isCredentialsNonExpired': isCredentialsNonExpired
@@ -83,21 +83,23 @@ class UsuarioModel {
       nome: json['nome'],
       locais: json['locais'] != null ? List<int>.from(json['locais']) : [],
       // identidadeFuncional: json['identidadeFuncional'],
-      dataNascimento: DateTime.parse(json['dataNascimento']),
+      //  dataNascimento: DateTime.parse(json['dataNascimento']),
       //  instituicoesId: List<int>.from(json['instituicoesId'] ?? []),
       estadoOrigemId: json['estadoOrigemId'],
       instituicaoId: json['instituicaoId'],
       email: json['email'],
-      dataInclusao: DateTime.parse(json['dataInclusao']),
-      credito: json['credito'],
-      permissoes: json['permissoes'] != null
-          ? PermissaoModel.fromJsonList(json['permissoes'] as List)
-          : [],
+      //  dataInclusao: DateTime.parse(json['dataInclusao']),
+      credito: (json['credito'] != null)
+          ? (json['credito'] as num).toDouble()
+          : null,
+      // permissoes: json['permissoes'] != null
+      //     ? PermissaoModel.fromJsonList(json['permissoes'] as List)
+      //     : [],
       isEnabled: json['isEnabled'],
       username: json['username'],
-      authorities: json['authorities'] != null
-          ? AuthorityModel.fromJsonList(json['authorities'] as List)
-          : [],
+      // authorities: json['authorities'] != null
+      //     ? AuthorityModel.fromJsonList(json['authorities'] as List)
+      //     : [],
       isAccountNonExpired: json['isAccountNonExpired'],
       isAccountNonLocked: json['isAccountNonLocked'],
       isCredentialsNonExpired: json['isCredentialsNonExpired'],

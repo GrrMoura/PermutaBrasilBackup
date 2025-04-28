@@ -26,8 +26,9 @@ class AutenticacaoController {
         return;
       }
       SharedPreferences prefs = await SharedPreferences.getInstance();
+
       Sessao.fromJson(response.data).setSession(prefs, model);
-      context.push(AppRouterName.homeController);
+      context.go(AppRouterName.homeController);
     } catch (e) {
       debugPrint('erro: $e');
     }

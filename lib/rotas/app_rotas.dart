@@ -44,29 +44,7 @@ class Rotas {
       GoRoute(
         path: AppRouterName.homeScreen,
         builder: (context, state) {
-          return (const HomeScreen(
-            nomeUsuario: "Roberto Rocha",
-            matchs: [
-              {
-                "nome": "Maria Silva",
-                "estado": "SP",
-                "telefone": "(11) 98765-4321",
-                "imagem": "assets/images/saopaulo.png",
-              },
-              {
-                "nome": "Carlos Souza",
-                "estado": "RJ",
-                "telefone": "(21) 91234-5678",
-                "imagem": "assets/images/riodejaneiro.png",
-              },
-              {
-                "nome": "Ana Costa",
-                "estado": "MG",
-                "telefone": "(31) 99876-5432",
-                "imagem": "assets/images/minasgerais.png",
-              },
-            ],
-          ));
+          return (const HomeScreen());
         },
       ),
       GoRoute(

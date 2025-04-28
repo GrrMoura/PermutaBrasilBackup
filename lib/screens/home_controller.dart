@@ -13,32 +13,11 @@ class HomeControler extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomeControler> {
+  @override
   int selectedPage = 0;
 
   final _pageList = [
-    const HomeScreen(
-      nomeUsuario: "Roberto Rocha",
-      matchs: [
-        {
-          "nome": "Maria Silva",
-          "estado": "SP",
-          "telefone": "(11) 98765-4321",
-          "imagem": "assets/images/sp.png",
-        },
-        {
-          "nome": "Carlos Souza",
-          "estado": "RJ",
-          "telefone": "(21) 91234-5678",
-          "imagem": "assets/images/rj.png",
-        },
-        {
-          "nome": "Ana Costa",
-          "estado": "MG",
-          "telefone": "(31) 99876-5432",
-          "imagem": "assets/images/mg.png",
-        },
-      ],
-    ),
+    const HomeScreen(),
     const ConfigScreen(),
     const PlanoScreen(),
   ];

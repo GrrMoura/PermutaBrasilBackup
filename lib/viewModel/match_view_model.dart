@@ -1,38 +1,39 @@
 import 'package:permuta_brasil/models/estado_model.dart';
-import 'package:permuta_brasil/models/instituicao_model.dart';
 import 'package:permuta_brasil/models/usuario_model.dart';
 
-class ProfissionalModel {
+class MatchViewModel {
   int id;
   String cpf;
-  String dataNascimento;
-  String dataInclusao;
+  List<int> dataNascimento;
+  List<int> dataInclusao;
+  String telefone;
   UsuarioModel usuario;
   EstadoModel estado;
-  InstituicaoModel instituicao;
-  List<EstadoModel> destinos;
+  // List<EstadoModel> destinos;
 
-  ProfissionalModel({
+  MatchViewModel({
     required this.id,
     required this.cpf,
     required this.dataNascimento,
     required this.dataInclusao,
+    required this.telefone,
     required this.usuario,
     required this.estado,
-    required this.instituicao,
-    required this.destinos,
+    // required this.destinos,
   });
 
-  factory ProfissionalModel.fromJson(Map<String, dynamic> json) {
-    return ProfissionalModel(
+  factory MatchViewModel.fromJson(Map<String, dynamic> json) {
+    return MatchViewModel(
       id: json['id'] as int,
       cpf: json['cpf'] as String,
-      dataNascimento: json['dataNascimento'] as String,
-      dataInclusao: json['dataInclusao'] as String,
+      dataNascimento: List<int>.from(json['dataNascimento']),
+      dataInclusao: List<int>.from(json['dataInclusao']),
+      telefone: json['telefone'] as String,
       usuario: UsuarioModel.fromJson(json['usuario']),
       estado: EstadoModel.fromJson(json['estado']),
-      instituicao: InstituicaoModel.fromJson(json['instituicao']),
-      destinos: EstadoModel.fromJsonList(json['destinos'] as List),
+      // destinos: (json['destinos'] as List)
+      //     .map((e) => EstadoModel.fromJson(e))
+      //     .toList(),
     );
   }
 
@@ -42,10 +43,10 @@ class ProfissionalModel {
       'cpf': cpf,
       'dataNascimento': dataNascimento,
       'dataInclusao': dataInclusao,
+      'telefone': telefone,
       'usuario': usuario.toJson(),
       'estado': estado.toJson(),
-      'instituicao': instituicao.toJson(),
-      'destinos': EstadoModel.toJsonList(destinos),
+      //'destinos': destinos.map((d) => d.toJson()).toList(),
     };
   }
 }

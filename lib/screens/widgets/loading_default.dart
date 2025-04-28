@@ -45,20 +45,6 @@ class LoadingPequenoDefault extends StatelessWidget {
   }
 }
 
-class LoadingHourGlass extends StatelessWidget {
-  final double? tamanho;
-  final Color? cor;
-  const LoadingHourGlass({super.key, this.tamanho, this.cor});
-
-  @override
-  Widget build(BuildContext context) {
-    return SpinKitHourGlass(
-        color: cor ?? AppColors.cAccentColor,
-        size: tamanho ?? 100,
-        duration: const Duration(seconds: 2));
-  }
-}
-
 class LoadingDualRing extends StatelessWidget {
   final double? tamanho;
   final Color? cor;
