@@ -1,22 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permuta_brasil/rotas/app_rotas.dart';
+import 'package:permutabrasil/rotas/app_rotas.dart';
+import 'package:permutabrasil/services/firebase_messagin_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //     options: const FirebaseOptions(
-  //         apiKey: "",
-  //         appId: "",
-  //         messagingSenderId: 'sendid',
-  //         projectId: "",
-  //         storageBucket: ""));
-
-  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  // final firebaseMessagingService = FirebaseMessagingService();
-  // await firebaseMessagingService.initialize();
+  await Firebase.initializeApp();
+  final firebaseMessagingService = FirebaseMessagingService();
+  await firebaseMessagingService.initialize();
 
   runApp(
     const ProviderScope(

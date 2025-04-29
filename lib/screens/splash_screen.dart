@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permuta_brasil/rotas/app_screens_path.dart';
-import 'package:permuta_brasil/screens/widgets/loading_default.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashTermosPage extends StatefulWidget {

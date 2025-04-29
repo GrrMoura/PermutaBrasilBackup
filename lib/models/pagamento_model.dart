@@ -1,4 +1,4 @@
-import 'package:permuta_brasil/models/plano_model.dart';
+import 'package:permutabrasil/models/plano_model.dart';
 
 class PagamentoModel {
   String? id;

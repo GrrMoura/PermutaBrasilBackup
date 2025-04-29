@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:permuta_brasil/utils/app_snack_bar.dart';
+import 'package:permutabrasil/utils/app_snack_bar.dart';
 
 class ErroHandler {
   static void tratarErro(BuildContext context, Response response) {

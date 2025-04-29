@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permuta_brasil/models/plano_model.dart';
-import 'package:permuta_brasil/models/recuperar_senha_model.dart';
-import 'package:permuta_brasil/models/usuario_model.dart';
-import 'package:permuta_brasil/services/dispositivo_service.dart';
-import 'package:permuta_brasil/utils/app_constantes.dart';
-import 'package:permuta_brasil/utils/app_snack_bar.dart';
-import 'package:permuta_brasil/utils/erro_handler.dart';
-import 'package:permuta_brasil/viewModel/match_view_model.dart';
+import 'package:permutabrasil/models/plano_model.dart';
+import 'package:permutabrasil/models/recuperar_senha_model.dart';
+import 'package:permutabrasil/models/usuario_model.dart';
+import 'package:permutabrasil/services/dispositivo_service.dart';
+import 'package:permutabrasil/utils/app_constantes.dart';
+import 'package:permutabrasil/utils/app_snack_bar.dart';
+import 'package:permutabrasil/utils/erro_handler.dart';
+import 'package:permutabrasil/viewModel/match_view_model.dart';
 import '../services/user_service.dart';
 import 'package:dio/dio.dart';
 

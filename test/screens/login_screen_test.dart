@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:permuta_brasil/screens/login_screen.dart';
+import 'package:permutabrasil/screens/login_screen.dart';
 
 void main() {
   group('LoginScreen Tests', () {

@@ -11,31 +11,33 @@ class FirebaseMessagingService {
   }
 
   Future<void> initialize() async {
-    // Configura o listener de mensagens em segundo plano
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    try {
+      // Configura o listener de mensagens em segundo plano
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
 
-    // Solicitar permissão para receber notificações no iOS
-    await _firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+      // Solicitar permissão para receber notificações no iOS
+      await _firebaseMessaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
-    // Obter o token do FCM
-    _firebaseMessaging.getToken().then((token) {
+      // Obter o token do FCM
+      String? token = await _firebaseMessaging.getToken();
       debugPrint("🔹 Token FCM: $token");
-    });
 
-    // Listener para mensagens quando o app está aberto (foreground)
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint("🔹 Nova mensagem recebida: ${message.notification?.body}");
-      // Adicionar lógica para exibir alerta, snackbar, etc.
-    });
+      // Listener para mensagens quando o app está aberto (foreground)
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        debugPrint("🔹 Nova mensagem recebida: ${message.notification?.body}");
+      });
 
-    // Listener para quando o usuário clica na notificação e abre o app
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint("🔹 Notificação clicada: ${message.notification?.body}");
-      // Redirecionar para uma tela específica
-    });
+      // Listener para quando o usuário clica na notificação
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        debugPrint("🔹 Notificação clicada: ${message.notification?.body}");
+      });
+    } catch (e) {
+      debugPrint('Erro ao inicializar FirebaseMessaging: $e');
+    }
   }
 }

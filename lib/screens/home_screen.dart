@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:permuta_brasil/models/contato_model.dart';
-import 'package:permuta_brasil/models/foto_model.dart';
-import 'package:permuta_brasil/models/propaganda_model.dart';
-import 'package:permuta_brasil/provider/providers.dart';
-import 'package:permuta_brasil/screens/widgets/confirmar_debito.dart';
-import 'package:permuta_brasil/screens/widgets/loading_default.dart';
-import 'package:permuta_brasil/services/dispositivo_service.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
-import 'package:permuta_brasil/utils/app_snack_bar.dart';
-import 'package:permuta_brasil/utils/erro_handler.dart';
-import 'package:permuta_brasil/viewModel/match_view_model.dart';
+import 'package:permutabrasil/models/contato_model.dart';
+import 'package:permutabrasil/models/foto_model.dart';
+import 'package:permutabrasil/models/propaganda_model.dart';
+import 'package:permutabrasil/provider/providers.dart';
+import 'package:permutabrasil/screens/widgets/confirmar_debito.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
+import 'package:permutabrasil/services/dispositivo_service.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/app_snack_bar.dart';
+import 'package:permutabrasil/utils/erro_handler.dart';
+import 'package:permutabrasil/viewModel/match_view_model.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

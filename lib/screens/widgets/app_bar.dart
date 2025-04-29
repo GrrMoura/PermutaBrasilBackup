@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String titulo;

@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permuta_brasil/models/termo_model.dart';
-import 'package:permuta_brasil/rotas/app_screens_path.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
-import 'package:permuta_brasil/utils/app_snack_bar.dart';
+import 'package:permutabrasil/models/termo_model.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/app_snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TermosCadastroPage extends StatefulWidget {

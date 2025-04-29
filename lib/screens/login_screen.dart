@@ -4,16 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:permuta_brasil/controller/autenticacao_controller.dart';
-import 'package:permuta_brasil/models/autenticao_model.dart';
-import 'package:permuta_brasil/rotas/app_screens_path.dart';
-import 'package:permuta_brasil/screens/widgets/loading_default.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
-import 'package:permuta_brasil/utils/app_dimens.dart';
-import 'package:permuta_brasil/utils/app_constantes.dart';
-import 'package:permuta_brasil/utils/mask_utils.dart';
-import 'package:permuta_brasil/utils/styles.dart';
-import 'package:permuta_brasil/utils/validator.dart';
+import 'package:permutabrasil/controller/autenticacao_controller.dart';
+import 'package:permutabrasil/models/autenticao_model.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/app_dimens.dart';
+import 'package:permutabrasil/utils/app_constantes.dart';
+import 'package:permutabrasil/utils/mask_utils.dart';
+import 'package:permutabrasil/utils/styles.dart';
+import 'package:permutabrasil/utils/validator.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

@@ -1,5 +1,5 @@
-import 'package:permuta_brasil/models/estado_model.dart';
-import 'package:permuta_brasil/models/usuario_model.dart';
+import 'package:permutabrasil/models/estado_model.dart';
+import 'package:permutabrasil/models/usuario_model.dart';
 
 class MatchViewModel {
   int id;

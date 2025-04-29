@@ -1,15 +1,15 @@
 import 'package:go_router/go_router.dart';
-import 'package:permuta_brasil/models/plano_model.dart';
-import 'package:permuta_brasil/rotas/app_screens_path.dart';
-import 'package:permuta_brasil/screens/cadastro/cadastrar_screen.dart';
-import 'package:permuta_brasil/screens/cadastro/termos_screen.dart';
-import 'package:permuta_brasil/screens/home_controller.dart';
-import 'package:permuta_brasil/screens/login_screen.dart';
-import 'package:permuta_brasil/screens/home_screen.dart';
-import 'package:permuta_brasil/screens/pagamento/pagamento_pix.dart';
-import 'package:permuta_brasil/screens/pagamento/planos_screen.dart';
-import 'package:permuta_brasil/screens/recuperar_senha_screen.dart';
-import 'package:permuta_brasil/screens/splash_screen.dart';
+import 'package:permutabrasil/models/plano_model.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/screens/cadastro/cadastrar_screen.dart';
+import 'package:permutabrasil/screens/cadastro/termos_screen.dart';
+import 'package:permutabrasil/screens/home_controller.dart';
+import 'package:permutabrasil/screens/login_screen.dart';
+import 'package:permutabrasil/screens/home_screen.dart';
+import 'package:permutabrasil/screens/pagamento/pagamento_pix.dart';
+import 'package:permutabrasil/screens/pagamento/planos_screen.dart';
+import 'package:permutabrasil/screens/recuperar_senha_screen.dart';
+import 'package:permutabrasil/screens/splash_screen.dart';
 
 class Rotas {
   Rotas();

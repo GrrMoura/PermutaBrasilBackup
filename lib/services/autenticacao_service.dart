@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:permuta_brasil/models/autenticao_model.dart';
-import 'package:permuta_brasil/services/api_service.dart';
-import 'package:permuta_brasil/services/request_service.dart';
-import 'package:permuta_brasil/utils/app_constantes.dart';
-import 'package:permuta_brasil/utils/enums/enums.dart';
+import 'package:permutabrasil/models/autenticao_model.dart';
+import 'package:permutabrasil/services/api_service.dart';
+import 'package:permutabrasil/services/request_service.dart';
+import 'package:permutabrasil/utils/app_constantes.dart';
+import 'package:permutabrasil/utils/enums/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AutenticacaoService {

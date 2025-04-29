@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permuta_brasil/controller/user_controller.dart';
-import 'package:permuta_brasil/models/plano_model.dart';
-import 'package:permuta_brasil/rotas/app_screens_path.dart';
-import 'package:permuta_brasil/screens/widgets/app_bar.dart';
-import 'package:permuta_brasil/screens/widgets/loading_default.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
+import 'package:permutabrasil/controller/user_controller.dart';
+import 'package:permutabrasil/models/plano_model.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/screens/widgets/app_bar.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
 
 class PlanoScreen extends StatefulWidget {
   const PlanoScreen({super.key});

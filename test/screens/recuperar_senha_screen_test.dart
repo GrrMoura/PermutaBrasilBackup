@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permuta_brasil/screens/recuperar_senha_screen.dart'; // Importe a tela que será testada
+import 'package:permutabrasil/screens/recuperar_senha_screen.dart'; // Importe a tela que será testada
 
 void main() {
   group('RecuperarSenhaScreen', () {

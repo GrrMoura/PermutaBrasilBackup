@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permuta_brasil/services/user_service.dart';
-import 'package:permuta_brasil/viewModel/match_view_model.dart';
+import 'package:permutabrasil/services/user_service.dart';
+import 'package:permutabrasil/viewModel/match_view_model.dart';
 
 class MatchesNotifier extends StateNotifier<List<MatchViewModel>> {
   MatchesNotifier() : super([]);

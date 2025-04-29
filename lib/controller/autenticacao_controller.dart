@@ -4,13 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permuta_brasil/models/autenticao_model.dart';
-import 'package:permuta_brasil/models/sessao_model.dart';
-import 'package:permuta_brasil/provider/providers.dart';
-import 'package:permuta_brasil/rotas/app_screens_path.dart';
-import 'package:permuta_brasil/services/autenticacao_service.dart';
-import 'package:permuta_brasil/services/dispositivo_service.dart';
-import 'package:permuta_brasil/utils/erro_handler.dart';
+import 'package:permutabrasil/models/autenticao_model.dart';
+import 'package:permutabrasil/models/sessao_model.dart';
+import 'package:permutabrasil/provider/providers.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/services/autenticacao_service.dart';
+import 'package:permutabrasil/services/dispositivo_service.dart';
+import 'package:permutabrasil/utils/erro_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AutenticacaoController {

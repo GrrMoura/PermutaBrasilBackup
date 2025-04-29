@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permuta_brasil/controller/user_controller.dart';
-import 'package:permuta_brasil/models/recuperar_senha_model.dart';
-import 'package:permuta_brasil/screens/widgets/loading_default.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
-import 'package:permuta_brasil/utils/app_dimens.dart';
+import 'package:permutabrasil/controller/user_controller.dart';
+import 'package:permutabrasil/models/recuperar_senha_model.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/app_dimens.dart';
 
-import 'package:permuta_brasil/utils/styles.dart';
-import 'package:permuta_brasil/utils/validator.dart';
+import 'package:permutabrasil/utils/styles.dart';
+import 'package:permutabrasil/utils/validator.dart';
 
 class RecuperarSenhaScreen extends StatefulWidget {
   const RecuperarSenhaScreen({super.key});

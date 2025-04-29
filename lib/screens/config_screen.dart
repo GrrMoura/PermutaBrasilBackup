@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permuta_brasil/provider/providers.dart';
-import 'package:permuta_brasil/screens/home_controller.dart';
-import 'package:permuta_brasil/screens/widgets/app_bar.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
+import 'package:permutabrasil/provider/providers.dart';
+import 'package:permutabrasil/screens/home_controller.dart';
+import 'package:permutabrasil/screens/widgets/app_bar.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
 
 class ConfigScreen extends ConsumerStatefulWidget {
   const ConfigScreen({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:permuta_brasil/utils/app_colors.dart';
-import 'package:permuta_brasil/utils/styles.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/styles.dart';
 
 class LoadingDefault extends StatelessWidget {
   // final bool _visible = true;

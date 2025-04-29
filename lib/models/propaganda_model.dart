@@ -1,5 +1,5 @@
-import 'package:permuta_brasil/models/contato_model.dart';
-import 'package:permuta_brasil/models/foto_model.dart';
+import 'package:permutabrasil/models/contato_model.dart';
+import 'package:permutabrasil/models/foto_model.dart';
 
 class PropagandaViewModel {
   int? propagandaId;

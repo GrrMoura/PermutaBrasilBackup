@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:permuta_brasil/utils/app_snack_bar.dart';
+import 'package:permutabrasil/utils/app_snack_bar.dart';
 
 class DispositivoService {
   static Future<bool> verificarConexao() async {

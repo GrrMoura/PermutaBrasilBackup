@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:permuta_brasil/models/estado_instituicoes_model.dart';
-import 'package:permuta_brasil/models/estado_model.dart';
-import 'package:permuta_brasil/models/instituicao_model.dart';
-import 'package:permuta_brasil/services/estado_service.dart';
-import 'package:permuta_brasil/services/dispositivo_service.dart';
-import 'package:permuta_brasil/utils/erro_handler.dart';
+import 'package:permutabrasil/models/estado_instituicoes_model.dart';
+import 'package:permutabrasil/models/estado_model.dart';
+import 'package:permutabrasil/models/instituicao_model.dart';
+import 'package:permutabrasil/services/estado_service.dart';
+import 'package:permutabrasil/services/dispositivo_service.dart';
+import 'package:permutabrasil/utils/erro_handler.dart';
 
 class EstadoController {
   static Future<EstadosEInstituicoes> getEstados(BuildContext context) async {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:permuta_brasil/utils/validator.dart';
+import 'package:permutabrasil/utils/validator.dart';
 
 void main() {
   group('Validador', () {

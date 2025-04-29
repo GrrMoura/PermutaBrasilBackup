@@ -1,5 +1,5 @@
-import 'package:permuta_brasil/models/autenticao_model.dart';
-import 'package:permuta_brasil/utils/app_constantes.dart';
+import 'package:permutabrasil/models/autenticao_model.dart';
+import 'package:permutabrasil/utils/app_constantes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Sessao {
