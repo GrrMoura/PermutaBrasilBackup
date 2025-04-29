@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permuta_brasil/provider/providers.dart';
+import 'package:permuta_brasil/screens/home_controller.dart';
 import 'package:permuta_brasil/screens/widgets/app_bar.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 
-class ConfigScreen extends StatefulWidget {
+class ConfigScreen extends ConsumerStatefulWidget {
   const ConfigScreen({super.key});
 
   @override
-  State<ConfigScreen> createState() => _ConfigScreenState();
+  ConsumerState<ConfigScreen> createState() => _ConfigScreenState();
 }
 
-class _ConfigScreenState extends State<ConfigScreen> {
+class _ConfigScreenState extends ConsumerState<ConfigScreen> {
   bool isVisible = true;
   bool isNotificationEnable = true;
   @override
   Widget build(BuildContext context) {
+    final creditos = ref.watch(creditoProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       appBar: const CustomAppBar(titulo: "Configurações"),
@@ -23,13 +27,13 @@ class _ConfigScreenState extends State<ConfigScreen> {
         child: ListView(
           children: [
             SizedBox(height: 9.h),
-            _buildPlanoCard(context),
+            _buildPlanoCard(context, creditos),
             SizedBox(height: 9.h),
             _buildConfigPessoal(),
             SizedBox(height: 9.h),
             _buildVisibilityCard(context),
             SizedBox(height: 9.h),
-            _buildSuportCard(),
+            //  _buildSuportCard(),
           ],
         ),
       ),
@@ -111,48 +115,48 @@ class _ConfigScreenState extends State<ConfigScreen> {
     );
   }
 
-  Container _buildSuportCard() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-          borderRadius: BorderRadius.circular(12.0)),
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 20.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Suporte',
-              style: TextStyle(fontSize: 16.h, fontWeight: FontWeight.bold)),
-          SizedBox(height: 6.h),
-          ListTile(
-            minLeadingWidth: 30.w,
-            minTileHeight: 35.h,
-            leading: const Icon(Icons.help_outline),
-            title: const Text('Como usar o app'),
-            onTap: () async {
-              // Ação ao clicar na opção
-            },
-          ),
-          ListTile(
-            minLeadingWidth: 30.w,
-            minTileHeight: 35.h,
-            leading: const Icon(Icons.contact_support),
-            title: const Text('Contato para Suporte'),
-            onTap: () {
-              // Ação ao clicar na opção
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // Container _buildSuportCard() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black.withOpacity(0.05),
+  //             spreadRadius: 1,
+  //             blurRadius: 5,
+  //             offset: const Offset(0, 3),
+  //           ),
+  //         ],
+  //         borderRadius: BorderRadius.circular(12.0)),
+  //     padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 20.w),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text('Suporte',
+  //             style: TextStyle(fontSize: 16.h, fontWeight: FontWeight.bold)),
+  //         SizedBox(height: 6.h),
+  //         ListTile(
+  //           minLeadingWidth: 30.w,
+  //           minTileHeight: 35.h,
+  //           leading: const Icon(Icons.help_outline),
+  //           title: const Text('Como usar o app'),
+  //           onTap: () async {
+  //             // Ação ao clicar na opção
+  //           },
+  //         ),
+  //         ListTile(
+  //           minLeadingWidth: 30.w,
+  //           minTileHeight: 35.h,
+  //           leading: const Icon(Icons.contact_support),
+  //           title: const Text('Contato para Suporte'),
+  //           onTap: () {
+  //             // Ação ao clicar na opção
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Card _buildVisibilityCard(BuildContext context) {
     return Card(
@@ -171,7 +175,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Controle de Visibilidade e Notificações',
+                  'Controle de Visibilidade',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -209,42 +213,42 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 4.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.notifications, color: Colors.grey[700]),
-                    SizedBox(width: 8.w),
-                    Text(
-                      'Receber Notificações',
-                      style:
-                          TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
-                    ),
-                  ],
-                ),
-                Transform.scale(
-                  scale: 0.8,
-                  child: Switch(
-                    value: isNotificationEnable,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isNotificationEnable = value;
-                      });
-                    },
-                    activeColor: AppColors.cAccentColor,
-                  ),
-                ),
-              ],
-            ),
+            // SizedBox(height: 4.h),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Row(
+            //       children: [
+            //         Icon(Icons.notifications, color: Colors.grey[700]),
+            //         SizedBox(width: 8.w),
+            //         Text(
+            //           'Receber Notificações',
+            //           style:
+            //               TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+            //         ),
+            //       ],
+            //     ),
+            //     Transform.scale(
+            //       scale: 0.8,
+            //       child: Switch(
+            //         value: isNotificationEnable,
+            //         onChanged: (bool value) {
+            //           setState(() {
+            //             isNotificationEnable = value;
+            //           });
+            //         },
+            //         activeColor: AppColors.cAccentColor,
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
     );
   }
 
-  Card _buildPlanoCard(BuildContext context) {
+  Card _buildPlanoCard(BuildContext context, int creditos) {
     return Card(
       color: Colors.white,
       elevation: 5,
@@ -275,25 +279,27 @@ class _ConfigScreenState extends State<ConfigScreen> {
             Padding(
               padding: EdgeInsets.only(right: 20.w),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.workspace_premium,
-                          color: Color(0xFFFFD700)),
-                      SizedBox(width: 6.w),
-                      Text(
-                        'Plano: Ouro',
-                        style: TextStyle(fontSize: 14.sp),
-                      ),
-                    ],
+                  SizedBox(
+                    width: 200,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.workspace_premium,
+                            color: Color(0xFFFFD700)),
+                        SizedBox(width: 6.w),
+                        Text(
+                          'Plano: Ouro',
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     children: [
                       const Icon(Icons.attach_money, color: Color(0xFFFFD700)),
                       SizedBox(width: 6.w),
                       Text(
-                        'R\$ 100,00',
+                        "R\$: 100",
                         style:
                             TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
                       ),
@@ -306,17 +312,19 @@ class _ConfigScreenState extends State<ConfigScreen> {
             SizedBox(height: 10.h),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.credit_score, color: Colors.green),
-                    SizedBox(width: 6.w),
-                    Text(
-                      'Créditos: 18',
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
-                  ],
+                SizedBox(
+                  width: 200,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.credit_score, color: Colors.green),
+                      SizedBox(width: 6.w),
+                      Text(
+                        'Créditos: $creditos',
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                    ],
+                  ),
                 ),
                 Row(
                   children: [
@@ -363,7 +371,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.white),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  final homeState =
+                      context.findAncestorStateOfType<HomeControlerState>();
+                  homeState?.goToPage(2);
+                },
               ),
             ),
           ],

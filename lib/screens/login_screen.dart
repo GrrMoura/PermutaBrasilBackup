@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:permuta_brasil/controller/autenticacao_controller.dart';
-import 'package:permuta_brasil/controller/user_controller.dart';
 import 'package:permuta_brasil/models/autenticao_model.dart';
 import 'package:permuta_brasil/rotas/app_screens_path.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
@@ -15,14 +15,14 @@ import 'package:permuta_brasil/utils/mask_utils.dart';
 import 'package:permuta_brasil/utils/styles.dart';
 import 'package:permuta_brasil/utils/validator.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   AutenticacaoModel authModel = AutenticacaoModel();
@@ -236,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      await AutenticacaoController.logar(context, authModel);
+      await AutenticacaoController.logar(context, authModel, ref);
 
       setState(() {
         _isLoading = false;

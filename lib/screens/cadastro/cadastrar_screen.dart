@@ -5,12 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:permuta_brasil/controller/estado_controller.dart';
 import 'package:permuta_brasil/controller/user_controller.dart';
-import 'package:permuta_brasil/data/sqflite_helper.dart';
 import 'package:permuta_brasil/models/estado_instituicoes_model.dart';
 import 'package:permuta_brasil/models/estado_model.dart';
 import 'package:permuta_brasil/models/instituicao_model.dart';
 import 'package:permuta_brasil/models/usuario_model.dart';
-import 'package:permuta_brasil/screens/cadastro/termos_screen.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
 import 'package:permuta_brasil/utils/app_dimens.dart';
@@ -36,7 +34,6 @@ class CadastroScreenState extends State<CadastroScreen> {
   int _currentPage = 0;
 
   final ImagePicker _picker = ImagePicker();
-  DatabaseHelper db = DatabaseHelper();
 
   int? selectedEstadoOrigemId;
 

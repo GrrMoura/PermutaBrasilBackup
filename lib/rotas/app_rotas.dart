@@ -9,7 +9,6 @@ import 'package:permuta_brasil/screens/home_screen.dart';
 import 'package:permuta_brasil/screens/pagamento/pagamento_pix.dart';
 import 'package:permuta_brasil/screens/pagamento/planos_screen.dart';
 import 'package:permuta_brasil/screens/recuperar_senha_screen.dart';
-import 'package:permuta_brasil/screens/cadastro/selecao_estados_screen.dart';
 import 'package:permuta_brasil/screens/splash_screen.dart';
 
 class Rotas {
@@ -42,9 +41,7 @@ class Rotas {
         path: AppRouterName.pagamentoPixScreen,
         builder: (context, state) {
           PlanoModel model = state.extra as PlanoModel;
-          return (PagamentoPix(
-            planoModel: model,
-          ));
+          return (PagamentoPix(planoModel: model));
         },
       ),
       GoRoute(
@@ -61,12 +58,17 @@ class Rotas {
       ),
       GoRoute(
         path: AppRouterName.homeController,
-        builder: (context, state) => (const HomeControler()),
+        builder: (context, state) {
+          final pagina = (state.extra is int) ? state.extra as int : 1;
+          return (HomeControler(
+            selectedPage: pagina,
+          ));
+        },
       ),
-      GoRoute(
-        path: AppRouterName.selecaoEstado,
-        builder: (context, state) => (const SelecaoEstadosScreen()),
-      ),
+      // GoRoute(
+      //   path: AppRouterName.selecaoEstado,
+      //   builder: (context, state) => (const SelecaoEstadosScreen()),
+      // ),
     ],
   );
 }

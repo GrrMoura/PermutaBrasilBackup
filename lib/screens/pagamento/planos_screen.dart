@@ -199,7 +199,7 @@ class _PlanoScreenState extends State<PlanoScreen> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 8.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withAlpha(76),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(

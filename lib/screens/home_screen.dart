@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
@@ -8,16 +10,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permuta_brasil/models/contato_model.dart';
 import 'package:permuta_brasil/models/foto_model.dart';
 import 'package:permuta_brasil/models/propaganda_model.dart';
-import 'package:permuta_brasil/provider/matches_notifier.dart';
+import 'package:permuta_brasil/provider/providers.dart';
 import 'package:permuta_brasil/screens/widgets/confirmar_debito.dart';
 import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/services/dispositivo_service.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
-import 'package:permuta_brasil/utils/app_constantes.dart';
 import 'package:permuta_brasil/utils/app_snack_bar.dart';
 import 'package:permuta_brasil/utils/erro_handler.dart';
 import 'package:permuta_brasil/viewModel/match_view_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -30,7 +30,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getName();
     getMatches();
   }
 
@@ -71,7 +70,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
-  String? nome;
   bool isOcupado = true;
   List<PropagandaViewModel> propagandasBanco = [
     PropagandaViewModel(
@@ -142,14 +140,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final matches = ref.watch(matchesProvider);
+    final nome = ref.watch(nomeProvider);
+    final creditos = ref.watch(creditoProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(nome ?? ""),
       body: isOcupado
           ? const LoadingDualRing()
           : Column(
               children: [
                 _buildHeader(matches.length),
+                _buildCreditosCard(creditos),
                 Expanded(child: _buildMatchList(matches)),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -160,7 +161,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  AppBar _buildAppBar() {
+  Widget _buildCreditosCard(int creditos) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 8.0.h),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.teal[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.teal, width: 1),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // ignore: prefer_const_constructors
+            Icon(Icons.monetization_on_outlined, color: Colors.teal),
+            SizedBox(width: 8.w),
+            Text(
+              'Créditos disponíveis: $creditos',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.teal[800],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildAppBar(String nome) {
     return AppBar(
       title: Text(
         isOcupado ? "Bem-vindo" : "Bem-vindo, ${formatarNome(nome)}",
@@ -366,11 +397,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     } else {
       return "$anos anos";
     }
-  }
-
-  Future<void> getName() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    nome = prefs.getString(PrefsKey.userName);
   }
 
   String formatarNome(String? nomeCompleto) {
