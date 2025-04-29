@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:permuta_brasil/models/plano_model.dart';
 import 'package:permuta_brasil/rotas/app_screens_path.dart';
 import 'package:permuta_brasil/screens/cadastro/cadastrar_screen.dart';
+import 'package:permuta_brasil/screens/cadastro/termos_screen.dart';
 import 'package:permuta_brasil/screens/home_controller.dart';
 import 'package:permuta_brasil/screens/login_screen.dart';
 import 'package:permuta_brasil/screens/home_screen.dart';
@@ -9,11 +10,12 @@ import 'package:permuta_brasil/screens/pagamento/pagamento_pix.dart';
 import 'package:permuta_brasil/screens/pagamento/planos_screen.dart';
 import 'package:permuta_brasil/screens/recuperar_senha_screen.dart';
 import 'package:permuta_brasil/screens/cadastro/selecao_estados_screen.dart';
+import 'package:permuta_brasil/screens/splash_screen.dart';
 
 class Rotas {
   Rotas();
   static final routers = GoRouter(
-    initialLocation: AppRouterName.login,
+    initialLocation: AppRouterName.splashScreen,
     routes: [
       GoRoute(
         path: AppRouterName.cadastro,
@@ -26,6 +28,10 @@ class Rotas {
       GoRoute(
         path: AppRouterName.planoScreen,
         builder: (context, state) => (const PlanoScreen()),
+      ),
+      GoRoute(
+        path: AppRouterName.splashScreen,
+        builder: (context, state) => (const SplashTermosPage()),
       ),
       GoRoute(
         path: AppRouterName.login,
@@ -45,6 +51,12 @@ class Rotas {
         path: AppRouterName.homeScreen,
         builder: (context, state) {
           return (const HomeScreen());
+        },
+      ),
+      GoRoute(
+        path: AppRouterName.termoScreen,
+        builder: (context, state) {
+          return (const TermosCadastroPage());
         },
       ),
       GoRoute(

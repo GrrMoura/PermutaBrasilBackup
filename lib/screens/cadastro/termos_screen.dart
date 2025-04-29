@@ -1,14 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permuta_brasil/screens/widgets/app_bar.dart';
+import 'package:go_router/go_router.dart';
+import 'package:permuta_brasil/models/termo_model.dart';
+import 'package:permuta_brasil/rotas/app_screens_path.dart';
+import 'package:permuta_brasil/screens/widgets/loading_default.dart';
 import 'package:permuta_brasil/utils/app_colors.dart';
-
-class TermoModel {
-  final String titulo;
-  final String texto;
-
-  TermoModel({required this.titulo, required this.texto});
-}
+import 'package:permuta_brasil/utils/app_snack_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TermosCadastroPage extends StatefulWidget {
   const TermosCadastroPage({super.key});
@@ -20,54 +20,81 @@ class TermosCadastroPage extends StatefulWidget {
 class TermosCadastroPageState extends State<TermosCadastroPage> {
   int _paginaAtual = 0;
   bool _aceitouTermo = false;
-
   final List<TermoModel> _termos = [
     TermoModel(
-      titulo: 'Confidencialidade e Proteção de Dados',
+      titulo: 'Natureza do Serviço',
       texto: '''
-O usuário reconhece e concorda que o aplicativo Permuta Brasil lida com informações pessoais sensíveis, tais como nome, telefone de outros usuários.
+O aplicativo Permuta Brasil oferece aos usuários a prestação de serviços de disponibilização de acesso à sua plataforma digital, que funciona como um meio tecnológico de facilitação de conexões entre usuários interessados em permutas de estados.
 
-O usuário se compromete a:
-- Utilizar essas informações exclusivamente para fins de comunicação relacionada à permuta profissional.
-- Não compartilhar, vender, divulgar ou utilizar os dados obtidos através do aplicativo para quaisquer outros fins que não estejam diretamente relacionados à permuta de estados.
-- Manter o sigilo sobre todas as informações visualizadas no app, mesmo após deixar de utilizar o serviço.
+O serviço contratado limita-se ao acesso às funcionalidades disponibilizadas no ambiente virtual do aplicativo, não se estendendo à garantia de efetivação de permutas, à quantidade ou à qualidade dos perfis cadastrados, nem à verificação da veracidade das informações fornecidas por outros usuários.
 
-O descumprimento dessas condições poderá acarretar em medidas legais cabíveis conforme a legislação vigente (LGPD - Lei Geral de Proteção de Dados).
-''',
-    ),
-    TermoModel(
-      titulo: 'Pagamento para Disponibilização de Perfil',
-      texto: '''
-Para que seu perfil esteja visível e disponível para buscas de permutas dentro do aplicativo, o usuário deverá manter saldo de créditos suficiente em sua conta.
+O conteúdo da plataforma é dinâmico e depende exclusivamente da adesão voluntária de terceiros, razão pela qual o Permuta Brasil não assegura que, no momento do acesso, haverá usuários cadastrados, perfis compatíveis ou oportunidades de permuta disponíveis.
 
-O valor de R\$10 (dez reais) será descontado mensalmente do saldo de créditos como taxa de disponibilização de perfil.
-
-Caso o saldo de créditos seja insuficiente no momento da cobrança, o perfil será removido temporariamente da lista de possíveis permutas até que novos créditos sejam adquiridos.
-
-A compra de créditos é feita de forma antecipada pelo usuário, e a manutenção do perfil visível depende da existência de saldo disponível. O pagamento da taxa mensal não implica em garantias de encontrar permutas, sendo apenas o direito de ser listado e localizado pelos demais usuários.
-''',
-    ),
-    TermoModel(
-      titulo: 'Direito de Arrependimento',
-      texto: '''
-Ao adquirir créditos no aplicativo Permuta Brasil, o usuário reconhece que a prestação dos serviços ocorrerá imediatamente após a confirmação do pagamento, consistindo no acesso à plataforma e aos dados disponíveis no momento da consulta, se houver.
-
-O usuário entende e concorda que o conteúdo da plataforma depende da adesão voluntária de terceiros, não sendo garantida a existência, quantidade ou adequação dos perfis às suas expectativas ou necessidades de permuta.
-
-Dessa forma, conforme permitido pelo artigo 49 do Código de Defesa do Consumidor, o usuário concorda que, uma vez iniciado o serviço, não poderá exercer o direito de arrependimento e solicitar o cancelamento ou reembolso dos valores pagos, visto que o serviço foi integralmente disponibilizado.
-
+O usuário declara estar ciente de que a aquisição de créditos e a consequente utilização da plataforma não implicam em entrega de resultado específico, mas tão somente na disponibilização dos meios de busca e interação oferecidos.
 ''',
     ),
     TermoModel(
       titulo: 'Termo de Responsabilidade',
       texto: '''
-O aplicativo Permuta Brasil atua apenas como uma plataforma de conexão entre usuários interessados em permutas de estados.
+O aplicativo Permuta Brasil atua exclusivamente como um meio tecnológico que possibilita a conexão entre usuários interessados em permutas de estados, sendo a efetivação de conexões ou permutas dependente da adesão e participação de terceiros na plataforma, sem qualquer garantia de sucesso.
 
 O usuário reconhece que:
-- A plataforma não intermedeia, valida, garante ou participa das negociações entre as partes.
-- Toda responsabilidade pelas tratativas, acordos, combinações, deslocamentos e eventuais consequências das permutas é exclusiva dos próprios usuários.
-- O aplicativo não se responsabiliza por informações inverídicas fornecidas por outros usuários, nem por danos ou prejuízos decorrentes de qualquer tipo de negociação ou tentativa de permuta.
 
+1. O Permuta Brasil não intermedeia, valida, supervisiona, certifica, assegura ou participa, direta ou indiretamente, das negociações entre usuários.
+
+2. Toda responsabilidade pelas tratativas, acordos, combinações, deslocamentos e eventuais consequências decorrentes das permutas é exclusiva dos próprios usuários.
+
+3. O aplicativo não se responsabiliza por informações inverídicas fornecidas por outros usuários, nem por danos ou prejuízos decorrentes de qualquer tipo de negociação ou tentativa de permuta.
+
+4. Embora o envio da identidade funcional seja solicitado durante o cadastro, o aplicativo não realiza verificação técnica, pericial ou confirmação junto a bases oficiais quanto à autenticidade dos documentos recebidos, tampouco assegura que as imagens não tenham sido alteradas ou editadas. Dessa forma, o Permuta Brasil isenta-se de qualquer responsabilidade por documentos fraudulentos ou informações inexatas relacionadas à identidade dos usuários ''',
+    ),
+    TermoModel(
+      titulo: 'Confidencialidade e Proteção de Dados',
+      texto: '''
+O usuário reconhece e concorda que o aplicativo Permuta Brasil lida com informações pessoais sensíveis, tais como nome, telefone e outros dados fornecidos por usuários para fins de permuta profissional.
+
+O Permuta Brasil adota medidas de segurança para proteger esses dados, em conformidade com a legislação vigente, especialmente a Lei Geral de Proteção de Dados (LGPD).
+
+O usuário compromete-se a:
+
+1. Utilizar as informações pessoais acessadas exclusivamente para fins legítimos relacionados à permuta de estados.
+
+2. Não copiar, armazenar, divulgar, vender, transferir ou utilizar os dados obtidos através do aplicativo para quaisquer outros propósitos não autorizados.
+
+3. Manter o sigilo absoluto sobre todas as informações visualizadas no aplicativo, mesmo após a cessação de seu vínculo com a plataforma.
+
+4. Respeitar integralmente a legislação de proteção de dados, sendo o único responsável por qualquer uso indevido das informações acessadas.
+
+O descumprimento destas obrigações poderá acarretar medidas administrativas, cíveis e criminais cabíveis, conforme previsto na legislação aplicável.
+
+O tratamento de dados realizado pelo Permuta Brasil está detalhado em sua Política de Privacidade, que integra e complementa este Termo de Uso.
+''',
+    ),
+    TermoModel(
+      titulo: 'Pagamento para Disponibilização de Perfil',
+      texto: '''
+
+
+Para que seu perfil permaneça visível e disponível para buscas de permutas no aplicativo, é necessário manter saldo suficiente de créditos na conta.
+
+1. Será descontado diariamente 0,50 crédito (zero vírgula cinquenta) do saldo como taxa de disponibilização do perfil.
+
+2. Caso o saldo seja insuficiente no momento da cobrança, o perfil será temporariamente retirado da lista de possíveis permutas até a regularização com a compra de novos créditos.
+
+3. A aquisição de créditos é feita de forma antecipada pelo usuário, sendo responsabilidade do mesmo manter saldo para garantir a visibilidade do perfil.
+
+4. A cobrança da taxa garante apenas o direito de listagem e visibilidade no aplicativo, não assegurando a efetivação de permutas.''',
+    ),
+    TermoModel(
+      titulo: 'Direito de Arrependimento',
+      texto: '''
+Ao adquirir créditos no aplicativo Permuta Brasil, o usuário reconhece que:
+
+1. A prestação dos serviços ocorrerá imediatamente após a confirmação do pagamento, consistindo exclusivamente no acesso à plataforma e às funcionalidades disponíveis, independentemente da quantidade, qualidade ou adequação dos perfis cadastrados no momento da consulta.
+
+2. O conteúdo da plataforma depende da adesão voluntária de terceiros, não havendo qualquer garantia quanto à existência, número ou compatibilidade dos perfis de permuta disponíveis.
+
+3. Em conformidade com o artigo 49 do Código de Defesa do Consumidor, considerando que o serviço é prestado de forma imediata e integral, não será possível exercer o direito de arrependimento após a confirmação do pagamento, tampouco solicitar cancelamento ou reembolso dos valores pagos.
 ''',
     ),
     TermoModel(
@@ -91,7 +118,7 @@ O uso do aplicativo implica na aceitação plena e incondicional de todos os ter
     ),
   ];
 
-  void _proximoTermo() {
+  void _proximoTermo() async {
     if (_aceitouTermo) {
       if (_paginaAtual < _termos.length - 1) {
         setState(() {
@@ -99,13 +126,14 @@ O uso do aplicativo implica na aceitação plena e incondicional de todos os ter
           _aceitouTermo = false;
         });
       } else {
-        Navigator.pop(context, true); // Finaliza o processo
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('aceitou_termos', true);
+        context.go(AppRouterName.login);
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Você precisa aceitar o termo para continuar.')),
-      );
+      Generic.snackBar(
+          context: context,
+          mensagem: "Você precisa aceitar o termo para continuar.");
     }
   }
 

@@ -548,18 +548,7 @@ class CadastroScreenState extends State<CadastroScreen> {
         _isLoading = true;
       });
 
-      final aceitouTodosOsTermos = await Navigator.push<bool>(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const TermosCadastroPage(),
-        ),
-      );
-
-      if (aceitouTodosOsTermos == true) {
-        print('aceitou');
-        //   await UserController.cadastrarUser(context, usuarioModel);
-      }
-
+      await UserController.cadastrarUser(context, usuarioModel);
       setState(() {
         _isLoading = false;
       });

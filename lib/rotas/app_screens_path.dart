@@ -7,4 +7,6 @@ abstract class AppRouterName {
   static const String homeScreen = '/homeScreen';
   static const String planoScreen = '/planoScreen';
   static const String pagamentoPixScreen = '/pagamentoPixScreen';
+  static const String termoScreen = '/termoScreen';
+  static const String splashScreen = '/splashScreen';
 }
