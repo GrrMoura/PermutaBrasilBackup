@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.permutabrasil">
+    package="com.permutabrasil.app">
     <application
         android:label="permutabrasil"
         android:name="${applicationName}"

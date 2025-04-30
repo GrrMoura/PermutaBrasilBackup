@@ -1,8 +1,20 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseMessagingService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+//instância do plugin de notificações locais
+  static final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
+    'default_channel_id',
+    'Permuta Notificações',
+    description: 'Canal para notificações do app Permuta Brasil',
+    importance: Importance.high,
+  );
 
   // Função que será chamada ao receber mensagens em segundo plano
   static Future<void> _firebaseMessagingBackgroundHandler(
@@ -12,6 +24,21 @@ class FirebaseMessagingService {
 
   Future<void> initialize() async {
     try {
+      //Cria o canal de notificação
+      await _localNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(_channel);
+
+      // inicialização do flutter_local_notifications
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
+
+      const InitializationSettings initializationSettings =
+          InitializationSettings(android: initializationSettingsAndroid);
+
+      await _localNotificationsPlugin.initialize(initializationSettings);
+
       // Configura o listener de mensagens em segundo plano
       FirebaseMessaging.onBackgroundMessage(
           _firebaseMessagingBackgroundHandler);
@@ -29,7 +56,24 @@ class FirebaseMessagingService {
 
       // Listener para mensagens quando o app está aberto (foreground)
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        debugPrint("🔹 Nova mensagem recebida: ${message.notification?.body}");
+        debugPrint("🔹 Mensagem em foreground: ${message.notification?.body}");
+
+        if (message.notification != null) {
+          _localNotificationsPlugin.show(
+            0,
+            message.notification!.title,
+            message.notification!.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                _channel.id,
+                _channel.name,
+                channelDescription: _channel.description,
+                importance: Importance.high,
+                priority: Priority.high,
+              ),
+            ),
+          );
+        }
       });
 
       // Listener para quando o usuário clica na notificação

@@ -1,20 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permutabrasil/rotas/app_rotas.dart';
 import 'package:permutabrasil/services/firebase_messagin_service.dart';
+import 'package:permutabrasil/utils/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   final firebaseMessagingService = FirebaseMessagingService();
   await firebaseMessagingService.initialize();
-
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
+    const ProviderScope(child: MyApp()),
   );
 }
 
@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           title: 'Flutter Demo',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme:
+                ColorScheme.fromSeed(seedColor: AppColors.cAccentColor),
             useMaterial3: true,
           ),
           routerConfig: Rotas.routers,

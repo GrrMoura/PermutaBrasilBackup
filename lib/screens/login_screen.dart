@@ -40,7 +40,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(top: 30.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
