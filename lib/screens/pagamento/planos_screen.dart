@@ -42,11 +42,10 @@ class _PlanoScreenState extends State<PlanoScreen> {
         titulo: "Planos Disponíveis",
       ),
       body: isOcupado
-          ? Column(
+          ? const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                    padding: EdgeInsets.only(top: 40.h),
-                    child: const LoadingDualRing(tamanho: 120)),
+                LoadingDualRing(),
               ],
             )
           : planos.isEmpty

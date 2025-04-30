@@ -149,8 +149,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ? const LoadingDualRing()
           : Column(
               children: [
-                _buildHeader(matches.length),
-                _buildCreditosCard(creditos),
+                matches.isNotEmpty
+                    ? _buildHeader(matches.length)
+                    : _buildNoResults(matches.length),
+                if (matches.isNotEmpty) _buildCreditosCard(creditos),
                 Expanded(child: _buildMatchList(matches)),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -218,10 +220,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  Widget _buildNoResults(int matchLength) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 32.0.h),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off, size: 72.sp, color: Colors.grey[500]),
+          SizedBox(height: 20.h),
+          Text(
+            "Nenhuma permuta compatível encontrada",
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.teal[700],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            "Ainda não há usuários do estado desejado com interesse em vir para o seu.",
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.grey[700],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
   String textoPermutas(int matchLength) {
-    if (matchLength == 0) {
-      return "Nenhuma oportunidade encontrada.";
-    } else if (matchLength == 1) {
+    if (matchLength == 1) {
       return "$matchLength oportunidade de permuta";
     } else {
       return "$matchLength oportunidades de permuta";
