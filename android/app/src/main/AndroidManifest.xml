@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.permutabrasil.app">
+    package="com.team79.permutabrasil">
     <application
-        android:label="permutabrasil"
+        android:label="Permuta Brasil"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

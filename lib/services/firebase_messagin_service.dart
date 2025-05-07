@@ -1,6 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permutabrasil/data/SecureStorage/secure_storage_helper.dart';
+import 'package:permutabrasil/utils/app_constantes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseMessagingService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -52,8 +55,12 @@ class FirebaseMessagingService {
 
       // Obter o token do FCM
       String? token = await _firebaseMessaging.getToken();
+      await SecureStorageHelper.setToken(token ?? "");
+      String? tokenSalvo = await SecureStorageHelper.getToken();
       debugPrint("🔹 Token FCM: $token");
-
+      if (token != null && token != tokenSalvo) {
+        await SecureStorageHelper.setToken(token);
+      }
       // Listener para mensagens quando o app está aberto (foreground)
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         debugPrint("🔹 Mensagem em foreground: ${message.notification?.body}");

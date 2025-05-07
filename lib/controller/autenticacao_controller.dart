@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permutabrasil/data/SecureStorage/secure_storage_helper.dart';
 import 'package:permutabrasil/models/autenticao_model.dart';
 import 'package:permutabrasil/models/sessao_model.dart';
 import 'package:permutabrasil/provider/providers.dart';
@@ -19,7 +20,8 @@ class AutenticacaoController {
     if (!await DispositivoService.verificarConexaoComFeedback(context)) {
       return;
     }
-
+    String? tokenFcm = await SecureStorageHelper.getToken();
+    model.tokenFmc = tokenFcm;
     try {
       Response response = await AutenticacaoService.logar(model);
 
