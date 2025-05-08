@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permutabrasil/rotas/app_rotas.dart';
 import 'package:permutabrasil/services/firebase_messagin_service.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
@@ -13,9 +14,11 @@ void main() async {
   final firebaseMessagingService = FirebaseMessagingService();
   await firebaseMessagingService.initialize();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   runApp(
     const ProviderScope(child: MyApp()),
   );
+  MobileAds.instance.initialize();
 }
 
 class MyApp extends StatelessWidget {

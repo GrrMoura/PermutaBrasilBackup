@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:upgrader/upgrader.dart';
 
 class SplashTermosPage extends StatefulWidget {
   const SplashTermosPage({super.key});
@@ -17,7 +18,9 @@ class _SplashTermosPageState extends State<SplashTermosPage> {
   @override
   void initState() {
     super.initState();
-    _checkAceiteTermos();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAceiteTermos();
+    });
   }
 
   Future<void> _checkAceiteTermos() async {
@@ -34,9 +37,17 @@ class _SplashTermosPageState extends State<SplashTermosPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: LoadingDualRing(),
+    return UpgradeAlert(
+      showLater: false,
+      showIgnore: false,
+      shouldPopScope: () => false,
+      upgrader: Upgrader(
+        languageCode: 'pt',
+      ),
+      child: const Scaffold(
+        body: Center(
+          child: LoadingDualRing(),
+        ),
       ),
     );
   }

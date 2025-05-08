@@ -9,4 +9,5 @@ abstract class AppRouterName {
   static const String pagamentoPixScreen = '/pagamentoPixScreen';
   static const String termoScreen = '/termoScreen';
   static const String splashScreen = '/splashScreen';
+  static const String historicoGasto = '/historicoGasto';
 }

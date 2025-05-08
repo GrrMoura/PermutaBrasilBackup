@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permutabrasil/provider/providers.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/screens/home_controller.dart';
 import 'package:permutabrasil/screens/widgets/app_bar.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
@@ -14,6 +17,21 @@ class ConfigScreen extends ConsumerStatefulWidget {
 }
 
 class _ConfigScreenState extends ConsumerState<ConfigScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  void _loadAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _version = '${info.version}+${info.buildNumber}';
+    });
+  }
+
+  String _version = '';
+
   bool isVisible = true;
   bool isNotificationEnable = true;
   @override
@@ -33,7 +51,15 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
             SizedBox(height: 9.h),
             _buildVisibilityCard(context),
             SizedBox(height: 9.h),
-            //  _buildSuportCard(),
+            Center(
+              child: Text(
+                'Versão $_version',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -213,35 +239,6 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                 ),
               ],
             ),
-            // SizedBox(height: 4.h),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Row(
-            //       children: [
-            //         Icon(Icons.notifications, color: Colors.grey[700]),
-            //         SizedBox(width: 8.w),
-            //         Text(
-            //           'Receber Notificações',
-            //           style:
-            //               TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
-            //         ),
-            //       ],
-            //     ),
-            //     Transform.scale(
-            //       scale: 0.8,
-            //       child: Switch(
-            //         value: isNotificationEnable,
-            //         onChanged: (bool value) {
-            //           setState(() {
-            //             isNotificationEnable = value;
-            //           });
-            //         },
-            //         activeColor: AppColors.cAccentColor,
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
@@ -266,7 +263,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Detalhes do Plano',
+                  'Detalhes dos Créditos',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -276,34 +273,17 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
               ],
             ),
             SizedBox(height: 10.h),
-            Padding(
-              padding: EdgeInsets.only(right: 20.w),
+            InkWell(
+              onTap: () {
+                context.push(AppRouterName.historicoGasto);
+              },
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 200,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.workspace_premium,
-                            color: Color(0xFFFFD700)),
-                        SizedBox(width: 6.w),
-                        Text(
-                          'Plano: Ouro',
-                          style: TextStyle(fontSize: 14.sp),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.attach_money, color: Color(0xFFFFD700)),
-                      SizedBox(width: 6.w),
-                      Text(
-                        "R\$: 100",
-                        style:
-                            TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
-                      ),
-                    ],
+                  const Icon(Icons.history, color: Colors.black54),
+                  SizedBox(width: 6.w),
+                  Text(
+                    'Histórico de gastos',
+                    style: TextStyle(fontSize: 14.sp),
                   ),
                 ],
               ),
@@ -317,7 +297,7 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                   width: 200,
                   child: Row(
                     children: [
-                      const Icon(Icons.credit_score, color: Colors.green),
+                      const Icon(Icons.credit_score, color: Colors.black54),
                       SizedBox(width: 6.w),
                       Text(
                         'Créditos: $creditos',
@@ -326,23 +306,13 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    const Icon(Icons.verified, color: Colors.blue),
-                    SizedBox(width: 6.w),
-                    Text(
-                      'Status: Ativo',
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
-                  ],
-                ),
               ],
             ),
             SizedBox(height: 10.h),
 
             Row(
               children: [
-                const Icon(Icons.calendar_month, color: Colors.grey),
+                const Icon(Icons.calendar_month, color: Colors.black54),
                 SizedBox(width: 6.w),
                 Text(
                   'Última recarga: 04/02/2025',

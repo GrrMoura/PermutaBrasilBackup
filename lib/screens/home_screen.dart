@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permutabrasil/models/contato_model.dart';
 import 'package:permutabrasil/models/foto_model.dart';
 import 'package:permutabrasil/models/propaganda_model.dart';
@@ -456,13 +457,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 //   }
 }
 
-class PropagandaCarousel extends StatelessWidget {
+class PropagandaCarousel extends StatefulWidget {
   final List<PropagandaViewModel> propagandas;
 
-  const PropagandaCarousel({super.key, required this.propagandas});
+  PropagandaCarousel({super.key, required this.propagandas});
+
+  @override
+  State<PropagandaCarousel> createState() => _PropagandaCarouselState();
+}
+
+class _PropagandaCarouselState extends State<PropagandaCarousel> {
+  final BannerAd bannerAd = BannerAd(
+    adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: const BannerAdListener(),
+  )..load();
 
   @override
   Widget build(BuildContext context) {
+    final items = [
+      ...widget.propagandas
+          .map((propaganda) => _buildPropagandaItem(propaganda)),
+      _buildAdMobItem(), // insere banner AdMob como um item do carrossel
+    ];
+
     return CarouselSlider(
       options: CarouselOptions(
         height: 130,
@@ -472,30 +491,43 @@ class PropagandaCarousel extends StatelessWidget {
         enableInfiniteScroll: true,
         autoPlayInterval: const Duration(seconds: 3),
       ),
-      items: propagandas.map((propaganda) {
-        return GestureDetector(
-          onTap: () {},
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: CachedNetworkImage(
-              imageUrl: propaganda.fotoModel!.first.url!,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              placeholder: (context, url) => Center(
-                child: LoadingDualRing(tamanho: 20.sp),
-              ),
-              errorWidget: (context, url, error) => Container(
-                color: Colors.grey[300],
-                child: Icon(
-                  Icons.image_not_supported,
-                  color: Colors.grey[600],
-                  size: 50,
-                ),
-              ),
+      items: items,
+    );
+  }
+
+  Widget _buildPropagandaItem(PropagandaViewModel propaganda) {
+    return GestureDetector(
+      onTap: () {},
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: CachedNetworkImage(
+          imageUrl: propaganda.fotoModel!.first.url!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          placeholder: (context, url) => const Center(
+            child: LoadingDualRing(tamanho: 20),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.grey[300],
+            child: Icon(
+              Icons.image_not_supported,
+              color: Colors.grey[600],
+              size: 50,
             ),
           ),
-        );
-      }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdMobItem() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: AdWidget(ad: bannerAd),
+      ),
     );
   }
 }

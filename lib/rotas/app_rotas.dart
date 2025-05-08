@@ -3,6 +3,7 @@ import 'package:permutabrasil/models/plano_model.dart';
 import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/screens/cadastro/cadastrar_screen.dart';
 import 'package:permutabrasil/screens/cadastro/termos_screen.dart';
+import 'package:permutabrasil/screens/historico_gasto.dart';
 import 'package:permutabrasil/screens/home_controller.dart';
 import 'package:permutabrasil/screens/login_screen.dart';
 import 'package:permutabrasil/screens/home_screen.dart';
@@ -54,6 +55,12 @@ class Rotas {
         path: AppRouterName.termoScreen,
         builder: (context, state) {
           return (const TermosCadastroPage());
+        },
+      ),
+      GoRoute(
+        path: AppRouterName.historicoGasto,
+        builder: (context, state) {
+          return (HistoricoGastosScreen());
         },
       ),
       GoRoute(
