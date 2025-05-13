@@ -9,12 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AutenticacaoService {
   static Future<Response> logar(AutenticacaoModel model) async {
     var url = ApiServices.concatApiUrl("login");
-
-    var options = Options(headers: {});
-
-    var response = await RequestService.postOptions(
-        url: url, data: model.toJson(), options: options);
-
+    var response =
+        await RequestService.postSemOptions(url: url, data: model.toJson());
     return response;
   }
 

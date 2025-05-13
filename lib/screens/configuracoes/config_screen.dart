@@ -90,50 +90,71 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
             ),
             SizedBox(height: 8.h),
 
-            Row(
-              children: [
-                Icon(
-                  Icons.person,
-                  size: 22.sp,
-                  color: Colors.grey[700],
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  'Alterar Dados Pessoais',
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-              ],
+            InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () {
+                context.push(AppRouterName.alterarDados);
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 22.sp,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Alterar Dados Pessoais',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 10.h),
-
-            Row(
-              children: [
-                Icon(
-                  Icons.location_on_outlined,
-                  size: 22.sp,
-                  color: Colors.grey[700],
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  'Alterar Locais de Interesse',
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-              ],
+            InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () {
+                context.push(AppRouterName.selecaoEstado);
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: 22.sp,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Alterar Locais de Interesse',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 10.h),
-            Row(
-              children: [
-                Icon(
-                  Icons.lock,
-                  size: 22.sp,
-                  color: Colors.grey[700],
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  'Alterar Senha',
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-              ],
+            InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () {
+                context.push(AppRouterName.redefinirSenha,
+                    extra: {"modoInterno": true});
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.lock,
+                    size: 22.sp,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Alterar Senha',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

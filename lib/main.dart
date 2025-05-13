@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permutabrasil/rotas/app_rotas.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/services/deep_link_service.dart';
 import 'package:permutabrasil/services/firebase_messagin_service.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
 
@@ -21,10 +23,30 @@ void main() async {
   MobileAds.instance.initialize();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _deepLinkHandler = DeepLinkHandler();
+  @override
+  void initState() {
+    super.initState();
+
+    _deepLinkHandler.init(onLinkReceived: (uri) {
+      if (uri.path == AppRouterName.redefinirSenha) {
+        final token = uri.queryParameters['token'];
+        if (token != null && token.isNotEmpty) {
+          Rotas.routers.go('${AppRouterName.redefinirSenha}?token=$token',
+              extra: {"modoInterno": false});
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

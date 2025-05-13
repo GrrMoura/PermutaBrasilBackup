@@ -1,15 +1,19 @@
 import 'package:go_router/go_router.dart';
 import 'package:permutabrasil/models/plano_model.dart';
+import 'package:permutabrasil/models/redefinir_senha_model.dart';
 import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/screens/cadastro/cadastrar_screen.dart';
 import 'package:permutabrasil/screens/cadastro/termos_screen.dart';
-import 'package:permutabrasil/screens/historico_gasto.dart';
+import 'package:permutabrasil/screens/configuracoes/alterar_dados_pessoais.dart';
+import 'package:permutabrasil/screens/configuracoes/alterar_estados.dart';
+import 'package:permutabrasil/screens/configuracoes/historico_gasto.dart';
 import 'package:permutabrasil/screens/home_controller.dart';
 import 'package:permutabrasil/screens/login_screen.dart';
 import 'package:permutabrasil/screens/home_screen.dart';
 import 'package:permutabrasil/screens/pagamento/pagamento_pix.dart';
 import 'package:permutabrasil/screens/pagamento/planos_screen.dart';
-import 'package:permutabrasil/screens/recuperar_senha_screen.dart';
+import 'package:permutabrasil/screens/esqueceu_senha_screen.dart';
+import 'package:permutabrasil/screens/configuracoes/redefinir_senha_screen.dart';
 import 'package:permutabrasil/screens/splash_screen.dart';
 
 class Rotas {
@@ -22,8 +26,26 @@ class Rotas {
         builder: (context, state) => (const CadastroScreen()),
       ),
       GoRoute(
-        path: AppRouterName.recuperarSenha,
-        builder: (context, state) => (const RecuperarSenhaScreen()),
+        path: AppRouterName.esqueceuSenha,
+        builder: (context, state) => (const EsqueceuSenhaScreen()),
+      ),
+      GoRoute(
+        path: AppRouterName.alterarDados,
+        builder: (context, state) => (const AlterarDadosPessoaisScreen()),
+      ),
+      GoRoute(
+        path: AppRouterName.redefinirSenha,
+        builder: (context, state) {
+          final token = state.uri.queryParameters['token'];
+          final extra = state.extra;
+          final modoInterno =
+              extra is Map<String, dynamic> && extra['modoInterno'] == true;
+
+          return RedefinirSenhaScreen(
+            modoInterno: modoInterno,
+            token: token,
+          );
+        },
       ),
       GoRoute(
         path: AppRouterName.planoScreen,
@@ -72,10 +94,10 @@ class Rotas {
           ));
         },
       ),
-      // GoRoute(
-      //   path: AppRouterName.selecaoEstado,
-      //   builder: (context, state) => (const SelecaoEstadosScreen()),
-      // ),
+      GoRoute(
+        path: AppRouterName.selecaoEstado,
+        builder: (context, state) => (const SelecaoEstadosScreen()),
+      ),
     ],
   );
 }

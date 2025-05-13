@@ -355,7 +355,22 @@ class CadastroScreenState extends State<CadastroScreen> {
           keyboardType: TextInputType.datetime,
           prefixIcon: Icons.calendar_today,
         ),
-
+        _buildGenericTextField(
+          init: usuarioModel.graduacaoOuPatente ?? '',
+          label: 'Graduação ou Patente',
+          formato: MaskUtils.padrao(),
+          onSave: (String? value) {
+            usuarioModel.graduacaoOuPatente = value;
+          },
+          validator: (String? value) {
+            result = stringIsValid(value!);
+            if (result.isValid!) {
+              return null;
+            }
+            return result.errorMessage;
+          },
+          prefixIcon: Icons.star,
+        ),
         _buildGenericTextField(
           init: usuarioModel.telefone ?? '',
           formato: MaskUtils.maskTelefone(),
@@ -371,7 +386,7 @@ class CadastroScreenState extends State<CadastroScreen> {
             return result.errorMessage;
           },
           keyboardType: TextInputType.datetime,
-          prefixIcon: Icons.calendar_today,
+          prefixIcon: Icons.phone,
         ),
         _buildDropdownField(
           lista: estados,
@@ -385,35 +400,7 @@ class CadastroScreenState extends State<CadastroScreen> {
             });
           },
         ),
-
         SizedBox(height: 10.h),
-        //    usuarioModel.identidadeFuncional == null
-        // Container(
-        //   height: 55.h,
-        //   decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(10.0),
-        //     color: Colors.grey[300],
-        //   ),
-        //   child: const Center(
-        //     child: Text(
-        //       'Nenhuma foto selecionada.',
-        //       textAlign: TextAlign.center,
-        //       style: TextStyle(color: Colors.grey),
-        //     ),
-        //   ),
-        // ),
-        // : ClipRRect(
-        //     borderRadius: BorderRadius.circular(10.0),
-        //     child: Image.file(
-        //       usuarioModel.identidadeFuncional!,
-        //       height: 70,
-        //       width: double.infinity,
-        //       fit: BoxFit.cover,
-        //     ),
-        //   ),
-        // SizedBox(
-        //   height: 10.h,
-        // ),
         SizedBox(
           key: const Key('foto'),
           width: double.infinity,

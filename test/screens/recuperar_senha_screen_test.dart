@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permutabrasil/screens/recuperar_senha_screen.dart'; // Importe a tela que será testada
+import 'package:permutabrasil/screens/esqueceu_senha_screen.dart';
 
 void main() {
   group('RecuperarSenhaScreen', () {
@@ -13,16 +13,14 @@ void main() {
           designSize: const Size(360, 690),
           builder: (context, child) {
             return const MaterialApp(
-              home: RecuperarSenhaScreen(),
+              home: EsqueceuSenhaScreen(),
             );
           },
         ),
       );
 
-      // Aguarda a renderização completa da tela
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      // Verifica se os widgets principais estão presentes na tela
       expect(find.text('Recuperar Senha'), findsOneWidget);
       expect(find.text('Email'), findsOneWidget);
       expect(find.text('Esqueceu sua senha?'), findsOneWidget);

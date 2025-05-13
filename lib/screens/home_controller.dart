@@ -1,7 +1,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:permutabrasil/screens/config_screen.dart';
+import 'package:permutabrasil/screens/configuracoes/config_screen.dart';
 import 'package:permutabrasil/screens/home_screen.dart';
 import 'package:permutabrasil/screens/pagamento/planos_screen.dart';
 import 'package:permutabrasil/utils/app_colors.dart';

@@ -31,6 +31,20 @@ class RequestService {
     }
   }
 
+  static Future<Response> postSemOptions(
+      {required String url, Map<String, dynamic>? data}) async {
+    try {
+      Dio dio = Dio(BaseOptions(
+          connectTimeout: Duration(seconds: tempoLimite),
+          receiveTimeout: Duration(seconds: tempoLimite)));
+      Response response = await dio.post(url, data: data);
+
+      return response;
+    } on DioException catch (e) {
+      return e.response!;
+    }
+  }
+
   static Future<Response> getOptions({
     required String url,
     Options? options,

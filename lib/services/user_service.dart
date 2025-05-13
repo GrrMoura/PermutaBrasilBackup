@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:permutabrasil/models/recuperar_senha_model.dart';
+import 'package:permutabrasil/models/redefinir_senha_model.dart';
 import 'package:permutabrasil/models/usuario_model.dart';
 import 'package:permutabrasil/services/api_service.dart';
 import 'package:permutabrasil/services/autenticacao_service.dart';
@@ -25,6 +26,38 @@ class UserService {
         await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
 
     var response = await RequestService.getOptions(url: url, options: options);
+
+    return response;
+  }
+
+  static Future<Response> redefinirSenha(RedefinirSenhaModel model) async {
+    var url = ApiServices.concatApiUrl("usuario/redefinir-senha");
+    var response =
+        await RequestService.postSemOptions(url: url, data: model.toJson());
+
+    return response;
+  }
+
+  static Future<Response> alterarSenhaInterna(RedefinirSenhaModel model) async {
+    var url = ApiServices.concatApiUrl("usuario/alterar-senha");
+    var options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
+    var response = await RequestService.postOptions(
+        url: url, data: model.toJson(), options: options);
+
+    return response;
+  }
+
+  static Future<Response> alterarDadosPessoais(UsuarioModel model) async {
+    var url = ApiServices.concatApiUrl("usuario/alterar-dados-pessoais");
+    var options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
+
+    var response = await RequestService.postOptions(
+      url: url,
+      data: model.toJson(),
+      options: options,
+    );
 
     return response;
   }

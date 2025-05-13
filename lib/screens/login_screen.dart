@@ -172,7 +172,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
         children: [
           TextButton(
               onPressed: () {
-                context.push(AppRouterName.recuperarSenha);
+                context.push(AppRouterName.esqueceuSenha);
               },
               child: Text(
                 "Esqueceu senha?",

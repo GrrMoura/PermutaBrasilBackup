@@ -1,6 +1,7 @@
 class UsuarioModel {
   int? id;
   String? nome;
+  String? graduacaoOuPatente;
   String? email;
   String? cpf;
   String? telefone;
@@ -37,6 +38,7 @@ class UsuarioModel {
       this.nome,
       this.ativo,
       this.credito,
+      this.graduacaoOuPatente,
       // this.permissoes,
       this.isEnabled,
       this.username,
@@ -56,6 +58,7 @@ class UsuarioModel {
         'email': email,
         'dataInclusao': dataInclusao!.toIso8601String(),
         'nome': nome,
+        'graduacaoOuPatente': nome,
         'senha': senha,
         'telefone': telefone,
         'id': id,
@@ -78,6 +81,7 @@ class UsuarioModel {
       id: json['id'],
       telefone: json['telefone'],
       nome: json['nome'],
+      graduacaoOuPatente: json['graduacaoOuPatente'],
       locais: json['locais'] != null ? List<int>.from(json['locais']) : [],
       // identidadeFuncional: json['identidadeFuncional'],
       //  dataNascimento: DateTime.parse(json['dataNascimento']),

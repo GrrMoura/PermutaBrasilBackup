@@ -460,7 +460,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 class PropagandaCarousel extends StatefulWidget {
   final List<PropagandaViewModel> propagandas;
 
-  PropagandaCarousel({super.key, required this.propagandas});
+  const PropagandaCarousel({super.key, required this.propagandas});
 
   @override
   State<PropagandaCarousel> createState() => _PropagandaCarouselState();

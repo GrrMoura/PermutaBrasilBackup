@@ -9,14 +9,14 @@ import 'package:permutabrasil/utils/app_dimens.dart';
 import 'package:permutabrasil/utils/styles.dart';
 import 'package:permutabrasil/utils/validator.dart';
 
-class RecuperarSenhaScreen extends StatefulWidget {
-  const RecuperarSenhaScreen({super.key});
+class EsqueceuSenhaScreen extends StatefulWidget {
+  const EsqueceuSenhaScreen({super.key});
 
   @override
-  RecuperarSenhaScreenState createState() => RecuperarSenhaScreenState();
+  EsqueceuSenhaScreenState createState() => EsqueceuSenhaScreenState();
 }
 
-class RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
+class EsqueceuSenhaScreenState extends State<EsqueceuSenhaScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   ValidationResult result = ValidationResult();

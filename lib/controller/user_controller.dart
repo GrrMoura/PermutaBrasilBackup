@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permutabrasil/models/plano_model.dart';
 import 'package:permutabrasil/models/recuperar_senha_model.dart';
+import 'package:permutabrasil/models/redefinir_senha_model.dart';
 import 'package:permutabrasil/models/usuario_model.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/services/dispositivo_service.dart';
 import 'package:permutabrasil/utils/app_constantes.dart';
 import 'package:permutabrasil/utils/app_snack_bar.dart';
@@ -57,6 +59,67 @@ class UserController {
     }
 
     return true;
+  }
+
+  static Future<void> alterarDadosPessoais(
+      BuildContext context, UsuarioModel model) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) return;
+
+    Response response = await UserService.alterarDadosPessoais(model);
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return;
+    }
+
+    Generic.snackBar(
+      context: context,
+      mensagem: "Dados pessoais atualizados com sucesso",
+      tipo: AppName.sucesso,
+      duracao: 2,
+    );
+  }
+
+  static Future<void> alterarSenhaInterna(
+      BuildContext context, RedefinirSenhaModel model) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) return;
+
+    Response response = await UserService.alterarSenhaInterna(model);
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return;
+    }
+
+    Generic.snackBar(
+      context: context,
+      mensagem: "Senha alterada com sucesso",
+      tipo: AppName.sucesso,
+      duracao: 2,
+    );
+  }
+
+  static Future<void> redefinirSenha(
+      BuildContext context, RedefinirSenhaModel model) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) return;
+
+    Response response = await UserService.redefinirSenha(model);
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return;
+    }
+
+    Generic.snackBar(
+      context: context,
+      mensagem: "Senha redefinida com sucesso",
+      tipo: AppName.sucesso,
+      duracao: 2,
+    );
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    context.go(AppRouterName.login);
   }
 
   static Future<void> recuperarSenha(
