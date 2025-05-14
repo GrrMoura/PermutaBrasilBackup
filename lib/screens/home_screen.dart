@@ -405,14 +405,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  String _calcularTempoServico(List<int>? dataInclusao) {
-    if (dataInclusao == null || dataInclusao.length < 3) {
+  String _calcularTempoServico(String? dataInclusaoStr) {
+    if (dataInclusaoStr == null || dataInclusaoStr.isEmpty) {
       return "Data de inclusão inválida";
     }
-    DateTime dataInicio =
-        DateTime(dataInclusao[0], dataInclusao[1], dataInclusao[2]);
-    DateTime dataAtual = DateTime.now();
 
+    DateTime? dataInicio;
+    try {
+      dataInicio = DateTime.parse(dataInclusaoStr);
+    } catch (e) {
+      return "Data de inclusão inválida";
+    }
+
+    DateTime dataAtual = DateTime.now();
     int anos = dataAtual.year - dataInicio.year;
 
     if (dataAtual.month < dataInicio.month ||
@@ -421,7 +426,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       anos--;
     }
 
-    // Formata o texto de retorno
     if (anos == 0) {
       return "Menos de 1 ano";
     } else if (anos == 1) {

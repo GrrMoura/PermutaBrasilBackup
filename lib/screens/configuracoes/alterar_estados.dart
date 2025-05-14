@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permutabrasil/controller/estado_controller.dart';
+import 'package:permutabrasil/controller/user_controller.dart';
 import 'package:permutabrasil/models/estado_instituicoes_model.dart';
 import 'package:permutabrasil/models/estado_model.dart';
 import 'package:permutabrasil/models/usuario_model.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/styles.dart';
 
 class SelecaoEstadosScreen extends StatefulWidget {
   const SelecaoEstadosScreen({super.key});
@@ -16,6 +19,10 @@ class SelecaoEstadosScreen extends StatefulWidget {
 class _SelecaoEstadosScreenState extends State<SelecaoEstadosScreen> {
   List<EstadoModel>? estados = [];
   UsuarioModel usuarioModel = UsuarioModel();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  List<String> estadosSelecionados = [];
 
   @override
   void initState() {
@@ -32,8 +39,6 @@ class _SelecaoEstadosScreenState extends State<SelecaoEstadosScreen> {
       estados = estadosPegos;
     });
   }
-
-  List<String> estadosSelecionados = [];
 
   void _navegarParaProximaTela() {
     if (estadosSelecionados.isNotEmpty) {
@@ -161,25 +166,39 @@ class _SelecaoEstadosScreenState extends State<SelecaoEstadosScreen> {
               ),
             )
           else
-            Column(
-              children: [
-                _buildSelecionados(),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _submitForm,
-                    style: Styles().elevatedButtonStyle(),
-                    child: _isLoading
-                        ? LoadingDualRing(tamanho: 20.sp)
-                        : Text('Salvar Alterações',
-                            style: TextStyle(fontSize: 13.sp)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                children: [
+                  _buildSelecionados(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _submitForm,
+                      style: Styles().elevatedButtonStyle(),
+                      child: _isLoading
+                          ? LoadingDualRing(tamanho: 20.sp)
+                          : Text('Salvar Alterações',
+                              style: TextStyle(fontSize: 13.sp)),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
         ],
       ),
     );
+  }
+
+  void _submitForm() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    _formKey.currentState?.save();
+    setState(() => _isLoading = true);
+
+    await UserController.alterarDadosPessoais(context, usuarioModel);
+
+    setState(() => _isLoading = false);
   }
 
   Padding _buildSelecionados() {

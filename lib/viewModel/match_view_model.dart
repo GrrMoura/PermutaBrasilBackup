@@ -4,8 +4,8 @@ import 'package:permutabrasil/models/usuario_model.dart';
 class MatchViewModel {
   int id;
   String cpf;
-  List<int> dataNascimento;
-  List<int> dataInclusao;
+  String dataNascimento;
+  String dataInclusao;
   String telefone;
   UsuarioModel usuario;
   EstadoModel estado;
@@ -26,8 +26,8 @@ class MatchViewModel {
     return MatchViewModel(
       id: json['id'] as int,
       cpf: json['cpf'] as String,
-      dataNascimento: List<int>.from(json['dataNascimento']),
-      dataInclusao: List<int>.from(json['dataInclusao']),
+      dataNascimento: json['dataNascimento'],
+      dataInclusao: json['dataInclusao'],
       telefone: json['telefone'] as String,
       usuario: UsuarioModel.fromJson(json['usuario']),
       estado: EstadoModel.fromJson(json['estado']),
