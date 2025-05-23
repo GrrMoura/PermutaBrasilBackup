@@ -19,6 +19,7 @@ class MatchViewModel {
     required this.telefone,
     required this.usuario,
     required this.estado,
+
     // required this.destinos,
   });
 
@@ -28,6 +29,7 @@ class MatchViewModel {
       cpf: json['cpf'] as String,
       dataNascimento: json['dataNascimento'],
       dataInclusao: json['dataInclusao'],
+
       telefone: json['telefone'] as String,
       usuario: UsuarioModel.fromJson(json['usuario']),
       estado: EstadoModel.fromJson(json['estado']),

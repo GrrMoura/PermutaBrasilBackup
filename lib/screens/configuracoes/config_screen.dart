@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permutabrasil/controller/user_controller.dart';
 import 'package:permutabrasil/provider/providers.dart';
 import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/screens/home_controller.dart';
 import 'package:permutabrasil/screens/widgets/app_bar.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/viewModel/profissional_view_model.dart';
 
 class ConfigScreen extends ConsumerStatefulWidget {
   const ConfigScreen({super.key});
@@ -17,10 +20,14 @@ class ConfigScreen extends ConsumerStatefulWidget {
 }
 
 class _ConfigScreenState extends ConsumerState<ConfigScreen> {
+  ProfissionalViewModel? profissionalViewModel;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     _loadAppVersion();
+    _pegarProfissional();
   }
 
   void _loadAppVersion() async {
@@ -30,9 +37,19 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     });
   }
 
+  void _pegarProfissional() async {
+    final resultado = await UserController.buscarProfissional(context, ref);
+
+    if (mounted && resultado != null) {
+      setState(() {
+        ref.read(profissionalProvider.notifier).state = resultado;
+        isLoading = false;
+      });
+    }
+  }
+
   String _version = '';
 
-  bool isVisible = true;
   bool isNotificationEnable = true;
   @override
   Widget build(BuildContext context) {
@@ -40,29 +57,31 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       appBar: const CustomAppBar(titulo: "Configurações"),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-        child: ListView(
-          children: [
-            SizedBox(height: 9.h),
-            _buildPlanoCard(context, creditos),
-            SizedBox(height: 9.h),
-            _buildConfigPessoal(),
-            SizedBox(height: 9.h),
-            _buildVisibilityCard(context),
-            SizedBox(height: 9.h),
-            Center(
-              child: Text(
-                'Versão $_version',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Colors.grey[600],
-                ),
+      body: isLoading
+          ? const LoadingDualRing()
+          : Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+              child: ListView(
+                children: [
+                  SizedBox(height: 9.h),
+                  _buildPlanoCard(context, creditos),
+                  SizedBox(height: 9.h),
+                  _buildConfigPessoal(),
+                  SizedBox(height: 9.h),
+                  _buildVisibilityCard(context),
+                  SizedBox(height: 9.h),
+                  Center(
+                    child: Text(
+                      'Versão $_version',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -116,7 +135,10 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
-                context.push(AppRouterName.selecaoEstado);
+                context.push(
+                  AppRouterName.selecaoEstado,
+                  extra: profissionalViewModel?.destinos,
+                );
               },
               child: Row(
                 children: [
@@ -206,6 +228,8 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
   // }
 
   Card _buildVisibilityCard(BuildContext context) {
+    final profissional = ref.watch(profissionalProvider);
+    final isVisible = profissional?.visivelMatch ?? false;
     return Card(
       color: Colors.white,
       elevation: 5,
@@ -251,11 +275,9 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
                   child: Switch(
                     value: isVisible,
                     onChanged: (bool value) {
-                      setState(() {
-                        isVisible = value;
-                      });
+                      UserController.alterarStatusPerfil(context, ref);
                     },
-                    activeColor: AppColors.cAccentColor,
+                    activeColor: Colors.green,
                   ),
                 ),
               ],
@@ -300,18 +322,32 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
               },
               child: Row(
                 children: [
-                  const Icon(Icons.history, color: Colors.black54),
+                  Icon(Icons.trending_down, color: Colors.red[600]),
                   SizedBox(width: 6.w),
                   Text(
                     'Histórico de gastos',
-                    style: TextStyle(fontSize: 14.sp),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.red[800]),
                   ),
                 ],
               ),
             ),
-
             SizedBox(height: 10.h),
-
+            InkWell(
+              onTap: () {
+                context.push(AppRouterName.historicoCompra);
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.trending_up, color: Colors.green[600]),
+                  SizedBox(width: 6.w),
+                  Text(
+                    'Histórico de compras',
+                    style: TextStyle(fontSize: 14.sp, color: Colors.green[800]),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10.h),
             Row(
               children: [
                 SizedBox(

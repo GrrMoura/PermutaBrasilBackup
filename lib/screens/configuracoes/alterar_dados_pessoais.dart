@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:permutabrasil/controller/user_controller.dart';
-import 'package:permutabrasil/models/usuario_model.dart';
+import 'package:permutabrasil/provider/providers.dart';
 import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
 import 'package:permutabrasil/utils/app_dimens.dart';
 import 'package:permutabrasil/utils/mask_utils.dart';
 import 'package:permutabrasil/utils/styles.dart';
 import 'package:permutabrasil/utils/validator.dart';
+import 'package:permutabrasil/viewModel/profissional_view_model.dart';
 
-class AlterarDadosPessoaisScreen extends StatefulWidget {
+class AlterarDadosPessoaisScreen extends ConsumerStatefulWidget {
   const AlterarDadosPessoaisScreen({super.key});
 
   @override
-  State<AlterarDadosPessoaisScreen> createState() =>
+  ConsumerState<AlterarDadosPessoaisScreen> createState() =>
       _AlterarDadosPessoaisScreenState();
 }
 
 class _AlterarDadosPessoaisScreenState
-    extends State<AlterarDadosPessoaisScreen> {
+    extends ConsumerState<AlterarDadosPessoaisScreen> {
   final _formKey = GlobalKey<FormState>();
-  final UsuarioModel usuarioModel = UsuarioModel();
   ValidationResult result = ValidationResult();
-  bool _isLoading = false;
+  bool _isLoading = true;
+  late ProfissionalViewModel usuarioModel;
+
+  @override
+  void initState() {
+    super.initState();
+    final profissional = ref.read(profissionalProvider);
+    if (profissional == null) {
+      // Pode navegar de volta ou mostrar erro
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+      });
+    } else {
+      usuarioModel = profissional;
+      _isLoading = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +72,11 @@ class _AlterarDadosPessoaisScreenState
                 ),
                 SizedBox(height: 40.h),
                 _buildGenericTextField(
-                  init: usuarioModel.nome ?? '',
+                  init: usuarioModel.usuario.nome ?? '',
                   label: 'Nome',
                   formato: MaskUtils.padrao(),
                   onSave: (String? value) {
-                    usuarioModel.nome = value;
+                    usuarioModel.usuario.nome = value;
                   },
                   validator: (String? value) {
                     result = stringIsValid(value!);
@@ -71,11 +88,11 @@ class _AlterarDadosPessoaisScreenState
                   prefixIcon: Icons.person,
                 ),
                 _buildGenericTextField(
-                  init: usuarioModel.graduacaoOuPatente ?? '',
+                  init: usuarioModel.patenteClasse ?? '',
                   label: 'Graduação ou Patente',
                   formato: MaskUtils.padrao(),
                   onSave: (String? value) {
-                    usuarioModel.graduacaoOuPatente = value;
+                    usuarioModel.patenteClasse = value;
                   },
                   validator: (String? value) {
                     result = stringIsValid(value!);
@@ -87,11 +104,11 @@ class _AlterarDadosPessoaisScreenState
                   prefixIcon: Icons.star,
                 ),
                 _buildGenericTextField(
-                  init: usuarioModel.telefone ?? '',
+                  init: formatarTelefone(usuarioModel.telefone),
                   formato: MaskUtils.maskTelefone(),
                   label: 'Telefone',
                   onSave: (String? value) {
-                    usuarioModel.telefone = value;
+                    usuarioModel.telefone = value ?? "";
                   },
                   validator: (String? telefone) {
                     result = telefoneIsValid(telefone);
@@ -102,6 +119,40 @@ class _AlterarDadosPessoaisScreenState
                   },
                   keyboardType: TextInputType.datetime,
                   prefixIcon: Icons.phone,
+                ),
+                _buildGenericTextField(
+                  init: formatarData(usuarioModel.dataNascimento) ?? '',
+                  formato: MaskUtils.maskFormatterData(),
+                  label: 'Data de Nascimento',
+                  onSave: (String? value) {
+                    usuarioModel.dataNascimento = value ?? "";
+                  },
+                  validator: (String? dataNascimento) {
+                    result = dataInclusaoIsValid(dataNascimento);
+                    if (result.isValid!) {
+                      return null;
+                    }
+                    return result.errorMessage;
+                  },
+                  keyboardType: TextInputType.datetime,
+                  prefixIcon: Icons.calendar_month,
+                ),
+                _buildGenericTextField(
+                  init: formatarData(usuarioModel.dataInclusao) ?? '',
+                  formato: MaskUtils.maskFormatterData(),
+                  label: 'Data de Inclusão',
+                  onSave: (String? value) {
+                    usuarioModel.dataInclusao = value ?? "";
+                  },
+                  validator: (String? dataInclusao) {
+                    result = dataInclusaoIsValid(dataInclusao);
+                    if (result.isValid!) {
+                      return null;
+                    }
+                    return result.errorMessage;
+                  },
+                  keyboardType: TextInputType.datetime,
+                  prefixIcon: Icons.calendar_month,
                 ),
                 SizedBox(height: 40.h),
                 SizedBox(
@@ -129,7 +180,7 @@ class _AlterarDadosPessoaisScreenState
     _formKey.currentState?.save();
     setState(() => _isLoading = true);
 
-    await UserController.alterarDadosPessoais(context, usuarioModel);
+    //await UserController.alterarDadosPessoais(context, );
 
     setState(() => _isLoading = false);
   }
@@ -177,5 +228,31 @@ class _AlterarDadosPessoaisScreenState
         obscureText: obscureText,
       ),
     );
+  }
+
+  String? formatarData(String? dataOriginal) {
+    if (dataOriginal == null || dataOriginal.isEmpty) return null;
+
+    try {
+      DateTime data = DateTime.parse(dataOriginal);
+      return DateFormat('dd-MM-yyyy').format(data);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  String formatarTelefone(String numero) {
+    final apenasNumeros = numero.replaceAll(RegExp(r'\D'), '');
+
+    if (apenasNumeros.length >= 11) {
+      final ddd = apenasNumeros.substring(0, 2);
+      final digito9 = apenasNumeros.substring(2, 3);
+      final primeiraParte = apenasNumeros.substring(3, 7);
+      final segundaParte = apenasNumeros.substring(7, 11);
+
+      return '$ddd $digito9 $primeiraParte $segundaParte';
+    }
+
+    return numero;
   }
 }

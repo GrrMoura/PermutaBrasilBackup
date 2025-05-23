@@ -30,6 +30,40 @@ class UserService {
     return response;
   }
 
+  static Future<Response> buscarProfissional() async {
+    final url = ApiServices.concatApiUrl("usuario/profissional");
+
+    final options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
+
+    final response =
+        await RequestService.getOptions(url: url, options: options);
+
+    return response;
+  }
+
+  static Future<Response> pegarHistoricoCompras() async {
+    var url = ApiServices.concatApiUrl("usuario/pagamentos");
+
+    var options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
+
+    var response = await RequestService.getOptions(url: url, options: options);
+
+    return response;
+  }
+
+  static Future<Response> alterarStatus() async {
+    var url = ApiServices.concatApiUrl("usuario/visibilidade/toggle");
+
+    var options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
+
+    var response = await RequestService.postOptions(url: url, options: options);
+
+    return response;
+  }
+
   static Future<Response> redefinirSenha(RedefinirSenhaModel model) async {
     var url = ApiServices.concatApiUrl("usuario/redefinir-senha");
     var response =

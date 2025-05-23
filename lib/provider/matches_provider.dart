@@ -18,7 +18,7 @@ class MatchesNotifier extends StateNotifier<List<MatchViewModel>> {
           .toList();
       _ultimaRequisicao = DateTime.now();
     } else {
-      throw Exception('Erro ao buscar matches');
+      throw response;
     }
   }
 }

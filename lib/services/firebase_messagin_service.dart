@@ -2,8 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permutabrasil/data/SecureStorage/secure_storage_helper.dart';
-import 'package:permutabrasil/utils/app_constantes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseMessagingService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;

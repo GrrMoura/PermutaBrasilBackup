@@ -1,17 +1,22 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permutabrasil/models/pagamento_model.dart';
 import 'package:permutabrasil/models/plano_model.dart';
 import 'package:permutabrasil/models/recuperar_senha_model.dart';
 import 'package:permutabrasil/models/redefinir_senha_model.dart';
 import 'package:permutabrasil/models/usuario_model.dart';
+import 'package:permutabrasil/provider/providers.dart';
 import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/services/dispositivo_service.dart';
 import 'package:permutabrasil/utils/app_constantes.dart';
 import 'package:permutabrasil/utils/app_snack_bar.dart';
 import 'package:permutabrasil/utils/erro_handler.dart';
 import 'package:permutabrasil/viewModel/match_view_model.dart';
+import 'package:permutabrasil/viewModel/pagamento_view_model.dart';
+import 'package:permutabrasil/viewModel/profissional_view_model.dart';
 import '../services/user_service.dart';
 import 'package:dio/dio.dart';
 
@@ -99,6 +104,31 @@ class UserController {
     );
   }
 
+  static Future<void> alterarStatusPerfil(
+      BuildContext context, WidgetRef ref) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return;
+    }
+
+    Response response = await UserService.alterarStatus();
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return;
+    }
+    final profissional = ref.read(profissionalProvider);
+    ref.read(profissionalProvider.notifier).state =
+        profissional?.copyWith(visivelMatch: !profissional.visivelMatch);
+
+    Generic.snackBar(
+      context: context,
+      mensagem: "Status de visibilidade atualizado com sucesso!",
+      tipo: AppName.sucesso,
+      duracao: 2,
+    );
+    return;
+  }
+
   static Future<void> redefinirSenha(
       BuildContext context, RedefinirSenhaModel model) async {
     if (!await DispositivoService.verificarConexaoComFeedback(context)) return;
@@ -156,6 +186,44 @@ class UserController {
     return data.map((item) => PlanoModel.fromJson(item)).toList();
   }
 
+  static Future<List<PagamentoModel>?> pegarHistoricoDeCompras(
+      BuildContext context) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return null;
+    }
+
+    Response response = await UserService.pegarHistoricoCompras();
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return null;
+    }
+
+    List<dynamic> data = response.data;
+    return data.map((item) => PagamentoModel.fromMap(item)).toList();
+  }
+
+  static Future<List<PagamentoViewModel>?> buscarPagamentos(
+      BuildContext context) async {
+    // Verifica conexão
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return null;
+    }
+
+    // Faz a requisição
+    Response response = await UserService.pegarHistoricoCompras();
+
+    // Trata erro se necessário
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return null;
+    }
+
+    // Converte resposta em lista de PagamentoModel
+    List<dynamic> data = response.data;
+    return data.map((item) => PagamentoViewModel.fromJson(item)).toList();
+  }
+
   static Future<List<MatchViewModel>?> getMatches(BuildContext context) async {
     if (!await DispositivoService.verificarConexaoComFeedback(context)) {
       return null;
@@ -172,5 +240,25 @@ class UserController {
     return data
         .map((item) => MatchViewModel.fromJson(item['profissional']))
         .toList();
+  }
+
+  static Future<ProfissionalViewModel?>? buscarProfissional(
+      BuildContext context, WidgetRef ref) async {
+    // Verifica conexão
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return null;
+    }
+
+    // Faz a requisição
+    Response response = await UserService.buscarProfissional();
+
+    // Trata erro se necessário
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return null;
+    }
+
+    // Converte resposta em lista de UsuarioDestinoViewModel
+    return ProfissionalViewModel.fromJson(response.data);
   }
 }

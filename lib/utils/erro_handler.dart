@@ -7,14 +7,8 @@ class ErroHandler {
     String mensagemErro;
 
     switch (response.statusCode) {
-      case 400:
-        var erros = response.data['Errors'];
-
-        if (erros != null && erros.isNotEmpty) {
-          mensagemErro = erros.map((e) => e['Message']).join("\n");
-        } else {
-          mensagemErro = response.data['Message'] ?? "Erro não tratado";
-        }
+      case 409:
+        mensagemErro = response.data['detail'] ?? "Conflito detectado.";
         break;
 
       case 403:

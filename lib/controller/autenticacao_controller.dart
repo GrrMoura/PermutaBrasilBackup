@@ -34,9 +34,12 @@ class AutenticacaoController {
       Sessao.fromJson(response.data).setSession(prefs, model);
       final creditos = response.data['usuario']['credito'] ?? 0;
       final nome = response.data['usuario']['nome'] ?? 0;
+      final ativo = response.data['usuario']['ativo'] ?? 0;
 
       ref.read(creditoProvider.notifier).state = creditos;
       ref.read(nomeProvider.notifier).state = nome;
+      ref.read(statusProvider.notifier).state = ativo;
+
       context.go(AppRouterName.homeController, extra: 1);
     } catch (e) {
       debugPrint('erro: $e');
