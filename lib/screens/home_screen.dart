@@ -493,7 +493,8 @@ class _PropagandaCarouselState extends State<PropagandaCarousel> {
         enlargeCenterPage: true,
         viewportFraction: 0.8,
         enableInfiniteScroll: true,
-        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayInterval: const Duration(seconds: 4),
+        autoPlayAnimationDuration: const Duration(milliseconds: 1500),
       ),
       items: items,
     );

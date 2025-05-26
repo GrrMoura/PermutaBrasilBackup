@@ -65,7 +65,7 @@ class UserService {
   }
 
   static Future<Response> redefinirSenha(RedefinirSenhaModel model) async {
-    var url = ApiServices.concatApiUrl("usuario/redefinir-senha");
+    var url = ApiServices.concatApiUrl("publico/recuperar-senha");
     var response =
         await RequestService.postSemOptions(url: url, data: model.toJson());
 
@@ -73,7 +73,7 @@ class UserService {
   }
 
   static Future<Response> alterarSenhaInterna(RedefinirSenhaModel model) async {
-    var url = ApiServices.concatApiUrl("usuario/alterar-senha");
+    var url = ApiServices.concatApiUrl("publico/recuperar-senha");
     var options =
         await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
     var response = await RequestService.postOptions(
@@ -107,11 +107,11 @@ class UserService {
     return response;
   }
 
-  static Future<Response> cadastrarEstadosDeInteresse(
-      List<int> estadoIds) async {
+  static Future<Response> alterarLocais(List<int> estadoIds) async {
     var url = ApiServices.concatApiUrl("usuario/locais");
 
-    var options = Options(headers: {});
+    var options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
 
     var response = await RequestService.postOptions(
       url: url,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permutabrasil/controller/user_controller.dart';
 import 'package:permutabrasil/models/redefinir_senha_model.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
 import 'package:permutabrasil/utils/app_dimens.dart';
@@ -55,7 +56,13 @@ class _RedefinirSenhaScreenState extends State<RedefinirSenhaScreen> {
         centerTitle: true,
         backgroundColor: AppColors.cAccentColor,
         iconTheme: const IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            context.go(AppRouterName.login);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -92,7 +99,7 @@ class _RedefinirSenhaScreenState extends State<RedefinirSenhaScreen> {
                   onToggleVisibility: () {
                     setState(() => _verSenha = !_verSenha);
                   },
-                  onSave: (val) => redefinirSenhaModel.novaSenha = val,
+                  onChanged: (val) => redefinirSenhaModel.novaSenha = val,
                   validator: (val) {
                     result = senhaIsValid(val!);
                     return result.isValid! ? null : result.errorMessage;
@@ -107,7 +114,7 @@ class _RedefinirSenhaScreenState extends State<RedefinirSenhaScreen> {
                   onToggleVisibility: () {
                     setState(() => _verConfirmacao = !_verConfirmacao);
                   },
-                  onSave: (val) => redefinirSenhaModel.confirmarSenha = val,
+                  onChanged: (val) => redefinirSenhaModel.confirmarSenha = val,
                   validator: (val) {
                     if (val != redefinirSenhaModel.novaSenha) {
                       return 'As senhas não coincidem';
@@ -153,8 +160,8 @@ class _RedefinirSenhaScreenState extends State<RedefinirSenhaScreen> {
   Widget _buildGenericTextField({
     required String label,
     required IconData prefixIcon,
-    required void Function(String?) onSave,
     required String? Function(String?)? validator,
+    required void Function(String)? onChanged,
     TextInputType keyboardType = TextInputType.text,
     bool obscureText = false,
     bool mostrarBotaoVerSenha = false,
@@ -185,7 +192,7 @@ class _RedefinirSenhaScreenState extends State<RedefinirSenhaScreen> {
           ),
         ),
         keyboardType: keyboardType,
-        onSaved: onSave,
+        onChanged: onChanged,
         validator: validator,
         enabled: !_isLoading,
       ),

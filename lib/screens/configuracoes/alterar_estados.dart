@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permutabrasil/controller/estado_controller.dart';
 import 'package:permutabrasil/controller/user_controller.dart';
 import 'package:permutabrasil/models/estado_instituicoes_model.dart';
@@ -9,6 +10,8 @@ import 'package:permutabrasil/models/usuario_model.dart';
 import 'package:permutabrasil/provider/providers.dart';
 import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/utils/app_constantes.dart';
+import 'package:permutabrasil/utils/app_snack_bar.dart';
 import 'package:permutabrasil/utils/styles.dart';
 
 class SelecaoEstadosScreen extends ConsumerStatefulWidget {
@@ -22,7 +25,6 @@ class SelecaoEstadosScreen extends ConsumerStatefulWidget {
 class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
   List<EstadoModel>? estados = [];
   UsuarioModel usuarioModel = UsuarioModel();
-  final _formKey = GlobalKey<FormState>();
   bool _isLoading = true;
 
   List<String> estadosSelecionados = [];
@@ -54,22 +56,6 @@ class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
       }
       _isLoading = false;
     });
-  }
-
-  void _navegarParaProximaTela() {
-    if (estadosSelecionados.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              ProximaTela(estadosSelecionados: estadosSelecionados),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecione ao menos um estado!')),
-      );
-    }
   }
 
   @override
@@ -192,15 +178,25 @@ class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
                     child: Column(
                       children: [
                         _buildSelecionados(),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _submitForm,
-                            style: Styles().elevatedButtonStyle(),
-                            child: _isLoading
-                                ? LoadingDualRing(tamanho: 20.sp)
-                                : Text('Salvar Alterações',
-                                    style: TextStyle(fontSize: 13.sp)),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 5.h),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _isLoading
+                                  ? null
+                                  : () async {
+                                      final resultado = await _submitForm();
+                                      if (resultado && mounted) {
+                                        context.pop();
+                                      }
+                                    },
+                              style: Styles().elevatedButtonStyle(),
+                              child: _isLoading
+                                  ? LoadingDualRing(tamanho: 20.sp)
+                                  : Text('Salvar Alterações',
+                                      style: TextStyle(fontSize: 13.sp)),
+                            ),
                           ),
                         ),
                       ],
@@ -211,15 +207,39 @@ class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
     );
   }
 
-  void _submitForm() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    _formKey.currentState?.save();
+  Future<bool> _submitForm() async {
+    if ((usuarioModel.locais ?? []).isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Selecione ao menos um estado!')),
+      );
+      return false;
+    }
     setState(() => _isLoading = true);
 
-    await UserController.alterarDadosPessoais(context, usuarioModel);
+    bool sucesso =
+        await UserController.alterarLocais(context, usuarioModel.locais ?? []);
 
+    if (!mounted) return false;
+
+    if (sucesso) {
+      final novosDestinos = estados!
+          .where((estado) => (usuarioModel.locais ?? []).contains(estado.id))
+          .toList();
+
+      ref.read(profissionalProvider.notifier).state =
+          ref.read(profissionalProvider)?.copyWith(destinos: novosDestinos);
+
+      Generic.snackBar(
+        context: context,
+        mensagem: "Locais de interesse atualizados com sucesso",
+        tipo: AppName.sucesso,
+        duracao: 2,
+      );
+      setState(() => _isLoading = false);
+      return true;
+    }
     setState(() => _isLoading = false);
+    return false;
   }
 
   Padding _buildSelecionados() {

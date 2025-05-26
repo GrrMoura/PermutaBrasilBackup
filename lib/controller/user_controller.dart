@@ -43,29 +43,6 @@ class UserController {
     return true;
   }
 
-  static Future<bool> cadastrarEstadosDeInteresse(
-      BuildContext context, List<int> estadosId) async {
-    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
-      return false;
-    }
-
-    Response response =
-        await UserService.cadastrarEstadosDeInteresse(estadosId);
-
-    if (response.statusCode != 200) {
-      ErroHandler.tratarErro(context, response);
-      return false;
-      //     Generic.snackBar(
-      //       context: context,
-      //       mensagem: "Cadastro realizado com sucesso",
-      //       tipo: AppName.sucesso,
-      //       duracao: 2);
-      //  context.push(AppRouterName.login);
-    }
-
-    return true;
-  }
-
   static Future<void> alterarDadosPessoais(
       BuildContext context, UsuarioModel model) async {
     if (!await DispositivoService.verificarConexaoComFeedback(context)) return;
@@ -83,6 +60,22 @@ class UserController {
       tipo: AppName.sucesso,
       duracao: 2,
     );
+  }
+
+  static Future<bool> alterarLocais(
+      BuildContext context, List<int> estadoIds) async {
+    if (!await DispositivoService.verificarConexaoComFeedback(context)) {
+      return false;
+    }
+
+    Response response = await UserService.alterarLocais(estadoIds);
+
+    if (response.statusCode != 200) {
+      ErroHandler.tratarErro(context, response);
+      return false;
+    }
+
+    return true;
   }
 
   static Future<void> alterarSenhaInterna(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -38,66 +39,72 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(top: 30.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SizedBox(height: 20.h),
-              Image.asset(
-                AppName.logo,
-                height: 230.h,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.h),
-                child: Text(
-                  "Permuta Brasil",
-                  style: TextStyle(fontSize: 20.sp),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: AppColors.scaffoldColor,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 30.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(height: 20.h),
+                Image.asset(
+                  AppName.logo,
+                  height: 230.h,
                 ),
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildGenericTextField(
-                      prefixIcon: Icons.email,
-                      initialValue: "geibison@hotmail.com",
-                      label: "Email",
-                      onSave: (String? value) {
-                        authModel.login = value;
-                      },
-                      validator: (String? email) {
-                        result = emailIsValid(email!);
-                        if (result.isValid!) {
-                          return null;
-                        }
-                        return result.errorMessage;
-                      },
-                    ),
-                    _buildGenericTextField(
-                      prefixIcon: Icons.lock,
-                      initialValue: "d1i2e3g4?",
-                      label: "Senha",
-                      onSave: (String? value) {
-                        authModel.senha = value;
-                      },
-                      validator: (String? password) {
-                        result = senhaIsValid(password!);
-                        if (result.isValid!) {
-                          return null;
-                        }
-                        return result.errorMessage;
-                      },
-                    ),
-                    _buildRecoverPassword(),
-                    _buildEnterButton(),
-                  ],
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.h),
+                  child: Text(
+                    "Permuta Brasil",
+                    style: TextStyle(fontSize: 20.sp),
+                  ),
                 ),
-              ),
-              _buildFooter(),
-            ],
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _buildGenericTextField(
+                        prefixIcon: Icons.email,
+                        initialValue: "geibison@hotmail.com",
+                        label: "Email",
+                        onSave: (String? value) {
+                          authModel.login = value;
+                        },
+                        validator: (String? email) {
+                          result = emailIsValid(email!);
+                          if (result.isValid!) {
+                            return null;
+                          }
+                          return result.errorMessage;
+                        },
+                      ),
+                      _buildGenericTextField(
+                        prefixIcon: Icons.lock,
+                        initialValue: "d1i2e3g4?",
+                        label: "Senha",
+                        onSave: (String? value) {
+                          authModel.senha = value;
+                        },
+                        validator: (String? password) {
+                          result = senhaIsValid(password!);
+                          if (result.isValid!) {
+                            return null;
+                          }
+                          return result.errorMessage;
+                        },
+                      ),
+                      _buildRecoverPassword(),
+                      _buildEnterButton(),
+                    ],
+                  ),
+                ),
+                _buildFooter(),
+              ],
+            ),
           ),
         ),
       ),

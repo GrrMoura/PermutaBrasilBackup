@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:permutabrasil/models/estado_model.dart';
 import 'package:permutabrasil/models/plano_model.dart';
 import 'package:permutabrasil/rotas/app_screens_path.dart';
 import 'package:permutabrasil/screens/cadastro/cadastrar_screen.dart';
@@ -16,7 +15,6 @@ import 'package:permutabrasil/screens/pagamento/planos_screen.dart';
 import 'package:permutabrasil/screens/esqueceu_senha_screen.dart';
 import 'package:permutabrasil/screens/configuracoes/redefinir_senha_screen.dart';
 import 'package:permutabrasil/screens/splash_screen.dart';
-import 'package:permutabrasil/viewModel/profissional_view_model.dart';
 
 class Rotas {
   Rotas();

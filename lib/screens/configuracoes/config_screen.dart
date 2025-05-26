@@ -156,28 +156,28 @@ class _ConfigScreenState extends ConsumerState<ConfigScreen> {
               ),
             ),
             SizedBox(height: 10.h),
-            InkWell(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onTap: () {
-                context.push(AppRouterName.redefinirSenha,
-                    extra: {"modoInterno": true});
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.lock,
-                    size: 22.sp,
-                    color: Colors.grey[700],
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    'Alterar Senha',
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                ],
-              ),
-            ),
+            // InkWell(
+            //   splashColor: Colors.transparent,
+            //   highlightColor: Colors.transparent,
+            //   onTap: () {
+            //     context.push(AppRouterName.redefinirSenha,
+            //         extra: {"modoInterno": true});
+            //   },
+            //   child: Row(
+            //     children: [
+            //       Icon(
+            //         Icons.lock,
+            //         size: 22.sp,
+            //         color: Colors.grey[700],
+            //       ),
+            //       SizedBox(width: 8.w),
+            //       Text(
+            //         'Alterar Senha',
+            //         style: TextStyle(fontSize: 14.sp),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
