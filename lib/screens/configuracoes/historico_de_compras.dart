@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permutabrasil/controller/user_controller.dart';
 import 'package:permutabrasil/provider/providers.dart';
 import 'package:permutabrasil/screens/widgets/app_bar.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
 import 'package:permutabrasil/viewModel/pagamento_view_model.dart';
 
@@ -18,6 +19,7 @@ class HistoricoComprasScreen extends ConsumerStatefulWidget {
 class _HistoricoComprasScreenState
     extends ConsumerState<HistoricoComprasScreen> {
   List<PagamentoViewModel> pagamentos = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _HistoricoComprasScreenState
 
       setState(() {
         pagamentos = apenasAprovados;
+        isLoading = false;
       });
     }
   }
@@ -84,7 +87,13 @@ class _HistoricoComprasScreenState
                     ),
                   ),
                   SizedBox(height: 16.h),
-                  ..._buildHistoricoComprasWidgets(),
+                  if (isLoading)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: LoadingDualRing(tamanho: 50.sp),
+                    )
+                  else
+                    ..._buildHistoricoComprasWidgets(),
                 ],
               ),
             ),

@@ -14,6 +14,7 @@ import 'package:permutabrasil/services/dispositivo_service.dart';
 import 'package:permutabrasil/utils/app_constantes.dart';
 import 'package:permutabrasil/utils/app_snack_bar.dart';
 import 'package:permutabrasil/utils/erro_handler.dart';
+import 'package:permutabrasil/viewModel/gastos_view_model.dart';
 import 'package:permutabrasil/viewModel/match_view_model.dart';
 import 'package:permutabrasil/viewModel/pagamento_view_model.dart';
 import 'package:permutabrasil/viewModel/profissional_view_model.dart';
@@ -179,13 +180,13 @@ class UserController {
     return data.map((item) => PlanoModel.fromJson(item)).toList();
   }
 
-  static Future<List<PagamentoModel>?> pegarHistoricoDeCompras(
+  static Future<List<GastosViewModel>?> pegarHistoricoConsumo(
       BuildContext context) async {
     if (!await DispositivoService.verificarConexaoComFeedback(context)) {
       return null;
     }
 
-    Response response = await UserService.pegarHistoricoCompras();
+    Response response = await UserService.pegarHistoricoConsumo();
 
     if (response.statusCode != 200) {
       ErroHandler.tratarErro(context, response);
@@ -193,20 +194,17 @@ class UserController {
     }
 
     List<dynamic> data = response.data;
-    return data.map((item) => PagamentoModel.fromMap(item)).toList();
+    return data.map((item) => GastosViewModel.fromJson(item)).toList();
   }
 
   static Future<List<PagamentoViewModel>?> buscarPagamentos(
       BuildContext context) async {
-    // Verifica conexão
     if (!await DispositivoService.verificarConexaoComFeedback(context)) {
       return null;
     }
 
-    // Faz a requisição
     Response response = await UserService.pegarHistoricoCompras();
 
-    // Trata erro se necessário
     if (response.statusCode != 200) {
       ErroHandler.tratarErro(context, response);
       return null;

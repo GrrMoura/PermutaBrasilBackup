@@ -53,6 +53,17 @@ class UserService {
     return response;
   }
 
+  static Future<Response> pegarHistoricoConsumo() async {
+    var url = ApiServices.concatApiUrl("usuario/consumo");
+
+    var options =
+        await AutenticacaoService.getCabecalho(TipoCabecalho.requisicao);
+
+    var response = await RequestService.getOptions(url: url, options: options);
+
+    return response;
+  }
+
   static Future<Response> alterarStatus() async {
     var url = ApiServices.concatApiUrl("usuario/visibilidade/toggle");
 

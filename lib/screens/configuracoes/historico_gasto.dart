@@ -1,32 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permutabrasil/controller/user_controller.dart';
+import 'package:permutabrasil/provider/providers.dart';
 import 'package:permutabrasil/screens/widgets/app_bar.dart';
+import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
+import 'package:permutabrasil/viewModel/gastos_view_model.dart';
 
-class HistoricoGastosScreen extends StatelessWidget {
-  final int saldoAtual = 20; // saldo atual do usuário
-  final List<Map<String, dynamic>> historico = [
-    {
-      'data': '07/05/2025',
-      'credito': 5,
-      'acao': 'Obteve os dados de contato de João Silva',
-    },
-    {
-      'data': '06/05/2025',
-      'credito': 1,
-      'acao': 'Créditos usados para manter perfil ativo',
-    },
-    {
-      'data': '05/05/2025',
-      'credito': 5,
-      'acao': 'Obteve os dados de contato de Maria Souza',
-    },
-  ];
+class HistoricoGastosScreen extends ConsumerStatefulWidget {
+  const HistoricoGastosScreen({super.key});
 
-  HistoricoGastosScreen({super.key});
+  @override
+  ConsumerState<HistoricoGastosScreen> createState() =>
+      _HistoricoGastosScreenState();
+}
+
+class _HistoricoGastosScreenState extends ConsumerState<HistoricoGastosScreen> {
+  // saldo atual do usuário
+  List<GastosViewModel> pagamentos = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _pegarGastos();
+  }
+
+  void _pegarGastos() async {
+    final resultado = await UserController.pegarHistoricoConsumo(context);
+
+    if (mounted && resultado != null) {
+      setState(() {
+        pagamentos = resultado;
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final creditos = ref.watch(creditoProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       appBar: const CustomAppBar(titulo: "Histórico de Gastos"),
@@ -44,7 +58,6 @@ class HistoricoGastosScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// ✅ SALDO ATUAL CENTRALIZADO
                   Center(
                     child: Column(
                       children: [
@@ -59,7 +72,7 @@ class HistoricoGastosScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '$saldoAtual créditos',
+                          '$creditos créditos',
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
@@ -70,9 +83,13 @@ class HistoricoGastosScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16.h),
-
-                  /// ✅ HISTÓRICO
-                  ..._buildHistoricoWidgets(),
+                  if (isLoading)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: LoadingDualRing(tamanho: 50.sp),
+                    )
+                  else
+                    ..._buildHistoricoWidgets(),
                 ],
               ),
             ),
@@ -82,12 +99,11 @@ class HistoricoGastosScreen extends StatelessWidget {
     );
   }
 
-  /// 🔥 FUNÇÃO PARA CONSTRUIR OS HISTÓRICOS + DIVIDER DIFERENCIADO
   List<Widget> _buildHistoricoWidgets() {
     List<Widget> widgets = [];
 
-    for (int i = 0; i < historico.length; i++) {
-      final item = historico[i];
+    for (int i = 0; i < pagamentos.length; i++) {
+      final item = pagamentos[i];
 
       widgets.add(
         Padding(
@@ -106,7 +122,7 @@ class HistoricoGastosScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '-${item['credito']} créditos',
+                      '-${item.valor.toStringAsFixed(2)} créditos',
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -115,7 +131,7 @@ class HistoricoGastosScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      item['acao'],
+                      item.descricao,
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: Colors.grey[800],
@@ -131,7 +147,7 @@ class HistoricoGastosScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          item['data'],
+                          _formatarData(item.dataHora),
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: Colors.grey[600],
@@ -148,7 +164,7 @@ class HistoricoGastosScreen extends StatelessWidget {
       );
 
       /// 🔥 Adiciona SEPARADOR DIFERENCIADO (exceto no último)
-      if (i != historico.length - 1) {
+      if (i != pagamentos.length - 1) {
         widgets.add(
           Padding(
             padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -179,7 +195,7 @@ class HistoricoGastosScreen extends StatelessWidget {
     }
 
     /// ✅ Mensagem caso lista esteja vazia
-    if (historico.isEmpty) {
+    if (pagamentos.isEmpty) {
       widgets.add(
         Center(
           child: Padding(
@@ -197,5 +213,11 @@ class HistoricoGastosScreen extends StatelessWidget {
     }
 
     return widgets;
+  }
+
+  String _formatarData(DateTime data) {
+    return '${data.day.toString().padLeft(2, '0')}/'
+        '${data.month.toString().padLeft(2, '0')}/'
+        '${data.year}';
   }
 }
