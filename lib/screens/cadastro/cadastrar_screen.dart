@@ -55,8 +55,14 @@ class CadastroScreenState extends State<CadastroScreen> {
     List<InstituicaoModel> instituicoesPegas = resultado.instituicoes;
 
     setState(() {
-      estados = estadosPegos;
-      instituicoes = instituicoesPegas;
+      estados = [
+        EstadoModel(id: 0, nome: 'Selecione...', sigla: '', foto: ''),
+        ...estadosPegos,
+      ];
+      instituicoes = [
+        InstituicaoModel(id: 0, nome: 'Selecione...', sigla: ''),
+        ...instituicoesPegas,
+      ];
     });
   }
 
@@ -65,7 +71,6 @@ class CadastroScreenState extends State<CadastroScreen> {
         _buildPagina2(),
         _buildPagina3()
         // nova página
-        // ...adicione quantas quiser
       ];
 
   Future<void> _pickImage() async {

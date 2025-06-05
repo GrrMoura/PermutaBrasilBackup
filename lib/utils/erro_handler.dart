@@ -7,6 +7,7 @@ class ErroHandler {
     String mensagemErro;
 
     switch (response.statusCode) {
+      case 400:
       case 409:
         mensagemErro = response.data['detail'] ?? "Conflito detectado.";
         break;
