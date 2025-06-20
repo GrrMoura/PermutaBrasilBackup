@@ -1,4 +1,4 @@
-package com.team79.permutabrasil
+package com.team79.permutaBrasil
 
 import io.flutter.embedding.android.FlutterActivity
 

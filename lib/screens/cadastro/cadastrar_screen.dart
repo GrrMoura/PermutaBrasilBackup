@@ -336,7 +336,7 @@ class CadastroScreenState extends State<CadastroScreen> {
           lista: instituicoes,
           model: instituicoes,
           label: 'Instituição',
-          value: selectedInstituicaoId ?? 1,
+          value: selectedInstituicaoId ?? 0,
           onChanged: (value) {
             setState(() {
               selectedInstituicaoId = value;
@@ -397,7 +397,7 @@ class CadastroScreenState extends State<CadastroScreen> {
           lista: estados,
           model: estados,
           label: 'Estado de Origem',
-          value: selectedEstadoOrigemId ?? 1,
+          value: selectedEstadoOrigemId ?? 0,
           onChanged: (value) {
             setState(() {
               selectedEstadoOrigemId = value;
@@ -429,6 +429,8 @@ class CadastroScreenState extends State<CadastroScreen> {
   }
 
   Widget _buildPagina3() {
+    final estadosValidos = estados?.where((e) => e.id != 0).toList() ?? [];
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,16 +442,16 @@ class CadastroScreenState extends State<CadastroScreen> {
             childAspectRatio: 1,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(), // continua aqui
-            children: List.generate(estados?.length ?? 0, (index) {
-              final estado = estados?[index];
+            children: List.generate(estadosValidos.length, (index) {
+              final estado = estadosValidos[index];
               final bool isSelected =
-                  estadosSelecionados.contains(estado?.sigla);
+                  estadosSelecionados.contains(estado.sigla);
 
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    final sigla = estado?.sigla;
-                    final id = estado?.id;
+                    final sigla = estado.sigla;
+                    final id = estado.id;
 
                     if (sigla == null || id == null) return;
 
@@ -630,6 +632,22 @@ class CadastroScreenState extends State<CadastroScreen> {
 
   void _proxima() {
     if (_formKey.currentState?.validate() ?? false) {
+      if ((selectedInstituicaoId ?? 0) <= 0) {
+        Generic.snackBar(
+          context: context,
+          mensagem: "Por favor, selecione uma Instituição.",
+        );
+        return;
+      }
+
+      if ((selectedEstadoOrigemId ?? 0) <= 0) {
+        Generic.snackBar(
+          context: context,
+          mensagem: "Por favor, selecione um Estado de Origem.",
+        );
+        return;
+      }
+
       _formKey.currentState?.save();
 
       if (_currentPage < _paginas.length - 1) {
