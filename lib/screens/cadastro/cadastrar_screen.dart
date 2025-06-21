@@ -1,6 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:permutabrasil/controller/estado_controller.dart';
@@ -9,6 +14,8 @@ import 'package:permutabrasil/models/estado_instituicoes_model.dart';
 import 'package:permutabrasil/models/estado_model.dart';
 import 'package:permutabrasil/models/instituicao_model.dart';
 import 'package:permutabrasil/models/usuario_model.dart';
+import 'package:permutabrasil/rotas/app_screens_path.dart';
+import 'package:permutabrasil/screens/cadastro/widget/dialog_foto.dart';
 import 'package:permutabrasil/screens/widgets/loading_default.dart';
 import 'package:permutabrasil/utils/app_colors.dart';
 import 'package:permutabrasil/utils/app_dimens.dart';
@@ -73,11 +80,13 @@ class CadastroScreenState extends State<CadastroScreen> {
         // nova página
       ];
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      final base64Image = base64Encode(bytes);
       setState(() {
-        //   usuarioModel.identidadeFuncional = File(pickedFile.path);
+        usuarioModel.imagemFuncionalBase64 = base64Image;
       });
     }
   }
@@ -140,7 +149,7 @@ class CadastroScreenState extends State<CadastroScreen> {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h, top: 5.h),
       child: const Text(
-        "Selecione um ou mais estados",
+        "Quais estados você tem interesse?",
         style: TextStyle(
           color: Colors.red,
           fontSize: 16,
@@ -361,11 +370,11 @@ class CadastroScreenState extends State<CadastroScreen> {
           prefixIcon: Icons.calendar_today,
         ),
         _buildGenericTextField(
-          init: usuarioModel.graduacaoOuPatente ?? '',
+          init: usuarioModel.patenteClasse ?? '',
           label: 'Graduação ou Patente',
           formato: MaskUtils.padrao(),
           onSave: (String? value) {
-            usuarioModel.graduacaoOuPatente = value;
+            usuarioModel.patenteClasse = value;
           },
           validator: (String? value) {
             result = stringIsValid(value!);
@@ -410,8 +419,7 @@ class CadastroScreenState extends State<CadastroScreen> {
           key: const Key('foto'),
           width: double.infinity,
           child: ElevatedButton.icon(
-            onPressed: null,
-            //  onPressed: _pickImage,
+            onPressed: selecionarImagem,
             icon: const Icon(Icons.camera_alt),
             label: const Text('Tirar Foto da Identidade Funcional'),
             style: ElevatedButton.styleFrom(
@@ -424,8 +432,43 @@ class CadastroScreenState extends State<CadastroScreen> {
             ),
           ),
         ),
+        if (usuarioModel.imagemFuncionalBase64 != null)
+          Card(
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.memory(
+                  base64Decode(usuarioModel.imagemFuncionalBase64!),
+                  width: double.infinity,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        const SizedBox(height: 5),
+        if (usuarioModel.imagemFuncionalBase64 != null)
+          Text(
+            'Tamanho: ${_calcularTamanhoBase64EmMB(usuarioModel.imagemFuncionalBase64 ?? "")} MB',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[700],
+            ),
+          ),
       ],
     );
+  }
+
+  String _calcularTamanhoBase64EmMB(String base64String) {
+    final tamanhoEmBytes =
+        base64String.length * 3 / 4; // Estimativa exata de bytes armazenados
+    final tamanhoEmMB = tamanhoEmBytes / (1024 * 1024);
+    return tamanhoEmMB.toStringAsFixed(2);
   }
 
   Widget _buildPagina3() {
@@ -457,11 +500,11 @@ class CadastroScreenState extends State<CadastroScreen> {
 
                     if (estadosSelecionados.contains(sigla)) {
                       estadosSelecionados.remove(sigla);
-                      usuarioModel.locais?.remove(id);
+                      usuarioModel.estadosDestino?.remove(id);
                     } else {
                       estadosSelecionados.add(sigla);
-                      usuarioModel.locais ??= [];
-                      usuarioModel.locais!.add(id);
+                      usuarioModel.estadosDestino ??= [];
+                      usuarioModel.estadosDestino!.add(id);
                     }
                   });
                 },
@@ -529,7 +572,8 @@ class CadastroScreenState extends State<CadastroScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
 
-      if (usuarioModel.locais == null || usuarioModel.locais!.isEmpty) {
+      if (usuarioModel.estadosDestino == null ||
+          usuarioModel.estadosDestino!.isEmpty) {
         Generic.snackBar(
             context: context,
             mensagem: "Por favor, escolha no mínimo um local.");
@@ -539,10 +583,20 @@ class CadastroScreenState extends State<CadastroScreen> {
         _isLoading = true;
       });
 
-      await UserController.cadastrarUser(context, usuarioModel);
+      bool sucesso = await UserController.cadastrarUser(context, usuarioModel);
       setState(() {
         _isLoading = false;
       });
+
+      if (sucesso) {
+        Generic.snackBar(
+          context: context,
+          mensagem: "Cadastro realizado com sucesso",
+          tipo: "sucesso",
+          duracao: 2,
+        );
+        context.go(AppRouterName.login);
+      }
     }
   }
 
@@ -632,20 +686,32 @@ class CadastroScreenState extends State<CadastroScreen> {
 
   void _proxima() {
     if (_formKey.currentState?.validate() ?? false) {
-      if ((selectedInstituicaoId ?? 0) <= 0) {
-        Generic.snackBar(
-          context: context,
-          mensagem: "Por favor, selecione uma Instituição.",
-        );
-        return;
-      }
+      // Se estiver na página 1 (índice 1 = segunda etapa), faz as validações adicionais
+      if (_currentPage == 1) {
+        if ((selectedInstituicaoId ?? 0) <= 0) {
+          Generic.snackBar(
+            context: context,
+            mensagem: "Por favor, selecione uma Instituição.",
+          );
+          return;
+        }
 
-      if ((selectedEstadoOrigemId ?? 0) <= 0) {
-        Generic.snackBar(
-          context: context,
-          mensagem: "Por favor, selecione um Estado de Origem.",
-        );
-        return;
+        if ((selectedEstadoOrigemId ?? 0) <= 0) {
+          Generic.snackBar(
+            context: context,
+            mensagem: "Por favor, selecione um Estado de Origem.",
+          );
+          return;
+        }
+
+        if (usuarioModel.imagemFuncionalBase64 == null ||
+            usuarioModel.imagemFuncionalBase64!.isEmpty) {
+          Generic.snackBar(
+            context: context,
+            mensagem: "Por favor, envie a foto da Identidade Funcional.",
+          );
+          return;
+        }
       }
 
       _formKey.currentState?.save();
@@ -665,6 +731,13 @@ class CadastroScreenState extends State<CadastroScreen> {
       setState(() {
         _currentPage -= 1;
       });
+    }
+  }
+
+  Future<void> selecionarImagem() async {
+    final ImageSource? source = await SelecionarImagemDialog.mostrar(context);
+    if (source != null) {
+      await _pickImage(source);
     }
   }
 }

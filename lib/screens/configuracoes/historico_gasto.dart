@@ -163,7 +163,6 @@ class _HistoricoGastosScreenState extends ConsumerState<HistoricoGastosScreen> {
         ),
       );
 
-      /// 🔥 Adiciona SEPARADOR DIFERENCIADO (exceto no último)
       if (i != pagamentos.length - 1) {
         widgets.add(
           Padding(
@@ -194,7 +193,6 @@ class _HistoricoGastosScreenState extends ConsumerState<HistoricoGastosScreen> {
       }
     }
 
-    /// ✅ Mensagem caso lista esteja vazia
     if (pagamentos.isEmpty) {
       widgets.add(
         Center(

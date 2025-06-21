@@ -50,8 +50,8 @@ class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
 
         if (jaSelecionado!) {
           estadosSelecionados.add(estado.sigla);
-          usuarioModel.locais ??= [];
-          usuarioModel.locais!.add(estado.id);
+          usuarioModel.estadosDestino ??= [];
+          usuarioModel.estadosDestino!.add(estado.id);
         }
       }
       _isLoading = false;
@@ -106,11 +106,11 @@ class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
 
                                       if (estadosSelecionados.contains(sigla)) {
                                         estadosSelecionados.remove(sigla);
-                                        usuarioModel.locais?.remove(id);
+                                        usuarioModel.estadosDestino?.remove(id);
                                       } else {
                                         estadosSelecionados.add(sigla);
-                                        usuarioModel.locais ??= [];
-                                        usuarioModel.locais!.add(id);
+                                        usuarioModel.estadosDestino ??= [];
+                                        usuarioModel.estadosDestino!.add(id);
                                       }
                                     });
                                   },
@@ -208,7 +208,7 @@ class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
   }
 
   Future<bool> _submitForm() async {
-    if ((usuarioModel.locais ?? []).isEmpty) {
+    if ((usuarioModel.estadosDestino ?? []).isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Selecione ao menos um estado!')),
       );
@@ -216,14 +216,15 @@ class _SelecaoEstadosScreenState extends ConsumerState<SelecaoEstadosScreen> {
     }
     setState(() => _isLoading = true);
 
-    bool sucesso =
-        await UserController.alterarLocais(context, usuarioModel.locais ?? []);
+    bool sucesso = await UserController.alterarLocais(
+        context, usuarioModel.estadosDestino ?? []);
 
     if (!mounted) return false;
 
     if (sucesso) {
       final novosDestinos = estados!
-          .where((estado) => (usuarioModel.locais ?? []).contains(estado.id))
+          .where((estado) =>
+              (usuarioModel.estadosDestino ?? []).contains(estado.id))
           .toList();
 
       ref.read(profissionalProvider.notifier).state =

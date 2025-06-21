@@ -1,7 +1,7 @@
 class UsuarioModel {
   int? id;
   String? nome;
-  String? graduacaoOuPatente;
+  String? patenteClasse;
   String? email;
   String? cpf;
   String? telefone;
@@ -14,7 +14,7 @@ class UsuarioModel {
   bool? ativo;
   double? credito;
   // List<PermissaoModel>? permissoes;
-  List<int>? locais;
+  List<int>? estadosDestino;
   bool? isEnabled;
   String? username;
   // List<AuthorityModel>? authorities;
@@ -22,12 +22,12 @@ class UsuarioModel {
   bool? isAccountNonLocked;
   bool? isCredentialsNonExpired;
 
-  //File? identidadeFuncional;
+  String? imagemFuncionalBase64;
 
   UsuarioModel(
       {this.cpf,
       this.id,
-      //  this.identidadeFuncional,
+      this.imagemFuncionalBase64,
       this.dataNascimento,
       this.instituicaoId,
       this.estadoOrigemId,
@@ -38,7 +38,7 @@ class UsuarioModel {
       this.nome,
       this.ativo,
       this.credito,
-      this.graduacaoOuPatente,
+      this.patenteClasse,
       // this.permissoes,
       this.isEnabled,
       this.username,
@@ -47,24 +47,24 @@ class UsuarioModel {
       this.isAccountNonLocked,
       this.isCredentialsNonExpired,
       this.telefone,
-      this.locais});
+      this.estadosDestino});
 
   Map<String, dynamic> toJson() => {
         'cpf': cpf,
-        //  'identidadeFuncional': identidadeFuncional,
+        'imagemFuncionalBase64': imagemFuncionalBase64,
         'dataNascimento': dataNascimento!.toIso8601String(),
         'instituicaoId': instituicaoId,
         'estadoOrigemId': estadoOrigemId,
         'email': email,
         'dataInclusao': dataInclusao!.toIso8601String(),
         'nome': nome,
-        'graduacaoOuPatente': nome,
+        'patenteClasse': patenteClasse,
         'senha': senha,
         'telefone': telefone,
         'id': id,
         'ativo': ativo,
         'credito': credito,
-        'locais': locais,
+        'estadosDestino': estadosDestino,
         //   'permissoes': PermissaoModel.toJsonList(permissoes ?? []),
         'isEnabled': isEnabled,
         'username': username,
@@ -81,9 +81,11 @@ class UsuarioModel {
       id: json['id'],
       telefone: json['telefone'],
       nome: json['nome'],
-      graduacaoOuPatente: json['graduacaoOuPatente'],
-      locais: json['locais'] != null ? List<int>.from(json['locais']) : [],
-      // identidadeFuncional: json['identidadeFuncional'],
+      patenteClasse: json['patenteClasse'],
+      estadosDestino: json['estadosDestino'] != null
+          ? List<int>.from(json['estadosDestino'])
+          : [],
+      imagemFuncionalBase64: json['imagemFuncionalBase64'],
       //  dataNascimento: DateTime.parse(json['dataNascimento']),
       //  instituicoesId: List<int>.from(json['instituicoesId'] ?? []),
       estadoOrigemId: json['estadoOrigemId'],

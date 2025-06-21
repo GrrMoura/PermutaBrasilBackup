@@ -175,7 +175,7 @@ class _AlterarDadosPessoaisScreenState
   }
 
   void _submitForm() async {
-    if (!_formKey.currentState!.validate()) return;
+    //   if (!_formKey.currentState!.validate()) return;
 
     _formKey.currentState?.save();
     setState(() => _isLoading = true);
