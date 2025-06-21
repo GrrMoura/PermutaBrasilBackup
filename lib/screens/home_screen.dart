@@ -19,6 +19,7 @@ import 'package:permutabrasil/utils/app_colors.dart';
 import 'package:permutabrasil/utils/app_snack_bar.dart';
 import 'package:permutabrasil/utils/erro_handler.dart';
 import 'package:permutabrasil/viewModel/match_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -31,7 +32,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getMatches();
+    _carregarEstadoInicial();
+  }
+
+  Future<void> _carregarEstadoInicial() async {
+    await carregarIdsClicados();
+    await getMatches();
+
+    setState(() {
+      isOcupado = false;
+    });
+  }
+
+  Future<void> salvarIdsClicados(Set<int> ids) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('idsClicados', ids.map((e) => e.toString()).toList());
+  }
+
+  Future<Set<int>> carregarIdsClicados() async {
+    final prefs = await SharedPreferences.getInstance();
+    final ids = prefs.getStringList('idsClicados');
+    if (ids == null) return {};
+    return ids.map((e) => int.parse(e)).toSet();
   }
 
   Future<void> getMatches() async {
@@ -55,22 +77,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     try {
       await ref.read(matchesProvider.notifier).carregarMatches();
-      setState(() {
-        isOcupado = false;
-      });
     } catch (erro) {
-      setState(() {
-        isOcupado = false;
-      });
       if (erro is Response) {
         ErroHandler.tratarErro(context, erro);
+        return;
       } else {
         Generic.snackBar(
             context: context, mensagem: "Erro inesperado", duracao: 3);
+        return;
       }
     }
   }
 
+  Set<int> idsClicados = {};
   bool isOcupado = true;
   List<PropagandaViewModel> propagandasBanco = [
     PropagandaViewModel(
@@ -280,69 +299,107 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildMatchCard(MatchViewModel? match) {
-    return Card(
-      color: Colors.white,
-      elevation: 5,
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildStateImage(match?.estado.foto ?? ""),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildMatchName(match?.usuario.nome ?? ''),
-                  SizedBox(height: 6.h),
-                  _buildMatchInfoRow(Icons.map, "Estado", match?.estado.sigla),
-                  _buildMatchInfoRow(Icons.military_tech, "Graduação", "Cabo"),
-                  _buildMatchInfoRow(Icons.access_time, "Tempo de serviço",
-                      _calcularTempoServico(match?.dataInclusao)),
-                ],
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+    bool foiClicado = match != null && idsClicados.contains(match.idUsuario);
+    return Stack(
+      children: [
+        Card(
+          color: foiClicado ? Colors.grey[200] : Colors.white,
+          elevation: 5,
+          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () async {
-                    bool? confirmar =
-                        await ConfirmarDebitoDialog.mostrar(context);
-                    if (confirmar == true) {
-                      _realizarDebito();
-                    }
-                  },
-                  icon: Icon(
-                    FontAwesomeIcons.whatsapp,
-                    size: 22.sp,
-                    color: Colors.green,
+                _buildStateImage(match?.estado.foto ?? ""),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMatchName(match),
+                      SizedBox(height: 6.h),
+                      _buildMatchInfoRow(
+                          Icons.map, "Estado", match?.estado.sigla),
+                      _buildMatchInfoRow(
+                          Icons.military_tech, "Graduação", "Cabo"),
+                      _buildMatchInfoRow(Icons.access_time, "Tempo de serviço",
+                          _calcularTempoServico(match?.dataInclusao)),
+                    ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () async {
-                    bool? confirmar =
-                        await ConfirmarDebitoDialog.mostrar(context);
-                    if (confirmar == true) {
-                      _realizarDebito();
-                    }
-                  },
-                  icon: Icon(
-                    FontAwesomeIcons.phone,
-                    size: 18.sp,
-                    color: Colors.green,
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        bool? confirmar =
+                            await ConfirmarDebitoDialog.mostrar(context);
+                        if (confirmar == true) {
+                          await _realizarDebito();
+                          setState(() {
+                            idsClicados.add(match!.idUsuario);
+                          });
+                          await salvarIdsClicados(idsClicados);
+                        }
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.whatsapp,
+                        size: 22.sp,
+                        color: Colors.green,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        bool? confirmar =
+                            await ConfirmarDebitoDialog.mostrar(context);
+                        if (confirmar == true) {
+                          await _realizarDebito();
+                          setState(() {
+                            idsClicados.add(match!.idUsuario);
+                          });
+                          await salvarIdsClicados(idsClicados);
+                        }
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.phone,
+                        size: 18.sp,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+        if (foiClicado)
+          Positioned(
+            top: 6.h,
+            right: 8.w,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(4),
+              child: const Icon(
+                Icons.check_circle,
+                color: Colors.teal,
+                size: 24,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -364,15 +421,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Text _buildMatchName(String name) {
+  Text _buildMatchName(MatchViewModel? match) {
+    if (match == null) return const Text('');
+
+    final identificador = gerarIdentificadorAnonimo(match.idUsuario);
+    final estado = match.estado.sigla;
+
     return Text(
-      name,
+      '$identificador - $estado',
       style: TextStyle(
         fontSize: 18.sp,
         fontWeight: FontWeight.bold,
         color: Colors.teal[700],
       ),
     );
+  }
+
+  String gerarIdentificadorAnonimo(int idUsuario) {
+    const deslocamento = 1500;
+    final calculo = idUsuario + deslocamento;
+    final letra = String.fromCharCode(65 + (idUsuario % 26)); // A-Z
+    return 'Perfil $letra$calculo';
   }
 
   Widget _buildMatchInfoRow(IconData icon, String label, String? value) {
@@ -446,7 +515,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return "${partes.first.toUpperCase()} ${partes.last.toUpperCase()}";
   }
 
-  void _realizarDebito() {}
+  Future<void> _realizarDebito() async {}
 
 //   Widget _buildExtraInfo(Map<String, String> match) {
 //     return Column(
@@ -494,7 +563,8 @@ class _PropagandaCarouselState extends State<PropagandaCarousel> {
         viewportFraction: 0.8,
         enableInfiniteScroll: true,
         autoPlayInterval: const Duration(seconds: 4),
-        autoPlayAnimationDuration: const Duration(milliseconds: 1500),
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        scrollPhysics: const BouncingScrollPhysics(),
       ),
       items: items,
     );

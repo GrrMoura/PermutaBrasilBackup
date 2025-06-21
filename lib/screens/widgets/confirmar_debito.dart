@@ -31,14 +31,23 @@ class ConfirmarDebitoDialog {
               ),
             ],
           ),
-          content: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              'Essa ação irá debitar créditos da sua conta.\nDeseja continuar?',
+          content: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: RichText(
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
+              text: const TextSpan(
+                style: TextStyle(fontSize: 16, color: Colors.black87),
+                children: [
+                  TextSpan(text: 'Essa ação irá '),
+                  TextSpan(
+                    text: 'DEBITAR ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                  TextSpan(text: 'créditos da sua conta.\n\nDeseja continuar?'),
+                ],
               ),
             ),
           ),

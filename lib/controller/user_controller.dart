@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permutabrasil/models/pagamento_model.dart';
 import 'package:permutabrasil/models/plano_model.dart';
 import 'package:permutabrasil/models/recuperar_senha_model.dart';
 import 'package:permutabrasil/models/redefinir_senha_model.dart';

@@ -14,7 +14,7 @@ class MatchesNotifier extends StateNotifier<List<MatchViewModel>> {
     if (response.statusCode == 200) {
       List<dynamic> data = response.data;
       state = data
-          .map((item) => MatchViewModel.fromJson(item['profissional']))
+          .map((item) => MatchViewModel.fromJson(item as Map<String, dynamic>))
           .toList();
       _ultimaRequisicao = DateTime.now();
     } else {

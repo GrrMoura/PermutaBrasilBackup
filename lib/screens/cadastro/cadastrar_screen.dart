@@ -496,8 +496,6 @@ class CadastroScreenState extends State<CadastroScreen> {
                     final sigla = estado.sigla;
                     final id = estado.id;
 
-                    if (sigla == null || id == null) return;
-
                     if (estadosSelecionados.contains(sigla)) {
                       estadosSelecionados.remove(sigla);
                       usuarioModel.estadosDestino?.remove(id);
@@ -524,7 +522,7 @@ class CadastroScreenState extends State<CadastroScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset(
-                          estado?.foto ?? "",
+                          estado.foto ?? "",
                           height: 60.h,
                           width: 60.h,
                           fit: BoxFit.cover,
@@ -532,7 +530,7 @@ class CadastroScreenState extends State<CadastroScreen> {
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        estado?.nome ?? "",
+                        estado.nome ?? "",
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
